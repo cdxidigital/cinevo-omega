@@ -9,15 +9,6 @@ import {
   type RemoteNow,
 } from "@/lib/remote-protocol";
 
-const EMPTY_NOW: RemoteNow = {
-  title: "",
-  detail: "",
-  playing: false,
-  position: 0,
-  volume: 1,
-  titles: [],
-};
-
 function asJson(value: unknown): unknown {
   if (typeof value === "string") {
     try {
@@ -65,8 +56,10 @@ export async function syncRemote(
 ): Promise<RemoteCommand[]> {
   const sql = await getSql();
   const clean = normalizeCode(code);
-  if (!clean) return [];
-  const payload = JSON.stringify({ ...sanitizeNow(now), updatedAt: Date.now() });
+  if (!/^[A-Z0-9]{6}$/.test(clean)) return [];
+  const safeNow = sanitizeNow(now);
+  if (JSON.stringify(safeNow).length > 50_000) return [];
+  const payload = JSON.stringify({ ...safeNow, updatedAt: Date.now() });
   const rows = await sql<{ queue_json: unknown }>`
     with snap as (
       select queue_json from cinevo_remotes
@@ -88,7 +81,7 @@ export async function syncRemote(
 export async function pushRemoteCommand(userId: string, code: string, command: unknown): Promise<boolean> {
   const clean = normalizeCode(code);
   const safe = sanitizeCommand(command);
-  if (!clean || !safe) return false;
+  if (!/^[A-Z0-9]{6}$/.test(clean) || !safe || JSON.stringify(safe).length > 4_000) return false;
   const sql = await getSql();
   const rows = await sql<{ code: string }>`
     update cinevo_remotes
