@@ -5,6 +5,7 @@ function reducedMotion() {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useInView<T extends HTMLElement>(once = true) {
   const ref = useRef<T>(null);
   const [inView, setInView] = useState(false);
@@ -32,6 +33,7 @@ export function useInView<T extends HTMLElement>(once = true) {
   return { ref, inView };
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useParallax(factor = 28) {
   const ref = useRef<HTMLImageElement>(null);
 
