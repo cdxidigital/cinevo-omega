@@ -5,6 +5,7 @@ import { Rehydrate } from "@/components/cinevo/rehydrate";
 import { Pwa } from "@/components/cinevo/pwa";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import appCss from "../styles.css?url";
+import omegaCss from "../styles.omega.css?url";
 
 const APP_NAME = "CINEVO";
 
