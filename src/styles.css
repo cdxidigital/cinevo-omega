@@ -2276,21 +2276,28 @@ html[data-theme="paper"] .house-ambient {
   color: rgb(244 241 234 / 72%);
   font-size: 13px;
   letter-spacing: 0.04em;
+  font-weight: 500;
+  transition: color 180ms ease;
 }
 .public-nav nav a::after {
   position: absolute;
   right: 0;
   bottom: -9px;
   left: 0;
-  height: 1px;
+  height: 2px;
   background: var(--cine-gold);
   content: "";
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 180ms var(--ease-cine);
 }
+.public-nav nav a:hover {
+  color: rgb(244 241 234 / 100%);
+}
 .public-nav nav a:hover::after,
-.public-nav nav a:focus-visible::after { transform: scaleX(1); }
+.public-nav nav a:focus-visible::after { 
+  transform: scaleX(1); 
+}
 .public-hero {
   min-height: min(88svh, 820px);
   padding: 136px clamp(20px, 7vw, 104px) 80px;
@@ -2329,14 +2336,40 @@ html[data-theme="paper"] .house-ambient {
 .public-secondary {
   min-height: 48px;
   border-radius: 7px;
-  transition: transform 180ms var(--ease-cine), background 180ms ease, border-color 180ms ease;
+  transition: transform 180ms var(--ease-cine), background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
-.public-primary { background: var(--cine-paper); color: var(--cine-ink); }
+.public-primary { 
+  background: var(--cine-paper); 
+  color: var(--cine-ink);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+}
 .public-primary:hover,
-.public-secondary:hover { transform: translateY(-2px); }
-.public-primary:hover { background: var(--cine-gold-soft); }
-.public-secondary { border-color: rgb(244 241 234 / 38%); color: var(--cine-paper); }
-.public-secondary:hover { border-color: var(--cine-gold); color: var(--cine-gold-soft); }
+.public-secondary:hover { 
+  transform: translateY(-2px);
+}
+.public-primary:hover { 
+  background: var(--cine-gold-soft);
+  box-shadow: 0 12px 24px rgb(0 0 0 / 25%);
+}
+.public-primary:active {
+  transform: translateY(0);
+}
+.public-secondary { 
+  border: 1.5px solid rgb(244 241 234 / 38%); 
+  color: var(--cine-paper);
+  background: transparent;
+  padding-inline: calc(1.5rem - 1.5px);
+}
+.public-secondary:hover { 
+  border-color: var(--cine-gold); 
+  color: var(--cine-gold-soft);
+  background: rgb(232 185 106 / 8%);
+}
+.public-secondary:active {
+  transform: translateY(0);
+}
 .public-hero__note {
   margin-top: 30px;
   border-left: 1px solid rgb(232 185 106 / 75%);
@@ -2356,11 +2389,15 @@ html[data-theme="paper"] .house-ambient {
 .home-highlight {
   border-color: rgb(255 255 255 / 12%);
   background: linear-gradient(145deg, rgb(255 255 255 / 5%), rgb(255 255 255 / 1%));
+  transition: all 180ms var(--ease-cine);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 8%);
 }
 .home-library-steps article:hover,
 .home-highlight:hover {
   border-color: rgb(232 185 106 / 58%);
-  background: linear-gradient(145deg, rgb(232 185 106 / 8%), rgb(255 255 255 / 2%));
+  background: linear-gradient(145deg, rgb(232 185 106 / 12%), rgb(255 255 255 / 4%));
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 16%);
 }
 .home-library-steps article > span,
 .home-highlight > span { color: var(--cine-gold); }
@@ -2466,9 +2503,25 @@ html[data-theme="paper"] .house-ambient {
   .public-home .public-hero h1 { max-width: 560px; margin-bottom: 22px; color: #15212b; font-size: clamp(2.8rem, 5.5vw, 5.2rem); letter-spacing: -0.065em; line-height: 0.98; }
   .public-home .public-hero h1 em { color: #087f9b; }
   .public-home .public-hero p { max-width: 500px; color: #526474; font-size: 0.98rem; line-height: 1.65; }
-  .public-home .public-primary { background: #15212b; color: #fff; box-shadow: 0 8px 20px rgb(21 33 43 / 12%); }
-  .public-home .public-secondary { border-color: #c9d8df; color: #15212b; }
-  .public-home .public-secondary:hover { border-color: #087f9b; color: #087f9b; }
+  .public-home .public-primary { 
+    background: #15212b; 
+    color: #fff; 
+    box-shadow: 0 4px 16px rgb(21 33 43 / 16%);
+  }
+  .public-home .public-primary:hover {
+    background: #1d2a37;
+    box-shadow: 0 12px 32px rgb(21 33 43 / 24%);
+  }
+  .public-home .public-secondary { 
+    border-color: #c9d8df; 
+    color: #15212b;
+    background: transparent;
+  }
+  .public-home .public-secondary:hover { 
+    border-color: #087f9b; 
+    color: #087f9b;
+    background: rgb(8 127 155 / 6%);
+  }
   .public-home .public-hero__note { border-left-color: #087f9b; }
   .public-home .public-hero__note svg { color: #087f9b; }
   .public-home .home-reel,
@@ -2476,9 +2529,19 @@ html[data-theme="paper"] .house-ambient {
   .public-home .home-downloads { background: #fff; color: #15212b; }
   .public-home .public-kicker { color: #087f9b; }
   .public-home .home-library-steps article,
-  .public-home .home-highlight { border-color: #dbe4e8; background: #f7fafb; box-shadow: none; }
+  .public-home .home-highlight { 
+    border-color: #dbe4e8; 
+    background: #f7fafb; 
+    box-shadow: 0 2px 8px rgb(21 33 43 / 4%);
+    transition: all 180ms var(--ease-cine);
+  }
   .public-home .home-library-steps article:hover,
-  .public-home .home-highlight:hover { border-color: #9ccbd5; background: #f1f9fa; transform: translateY(-3px); }
+  .public-home .home-highlight:hover { 
+    border-color: #087f9b; 
+    background: #eef9fb; 
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgb(8 127 155 / 12%);
+  }
   .public-home .home-library-steps h3,
   .public-home .home-highlight h3,
   .public-home .home-highlights h2,
@@ -2595,6 +2658,7 @@ html[data-theme="paper"] .house-ambient {
   flex: 0 0 auto;
   display: block;
   overflow: visible;
+  border-radius: 24px;
 }
 .brand[data-size="sm"] { gap: 10px; }
 .brand[data-size="sm"] .brand__gem { width: 28px; height: 28px; }
@@ -3456,6 +3520,7 @@ html[data-theme="nova"] .public-home,
   padding: 1.75rem 1.5rem 1.6rem;
   background: color-mix(in srgb, var(--color-cine-elevated) 92%, transparent);
   color: var(--color-cine-text);
+  text-align: center;
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
   border: 1px solid var(--color-cine-border);
@@ -3492,7 +3557,7 @@ html[data-theme="nova"] .public-home,
     height: 36px;
   }
   .login-card .brand[data-layout="stacked"][data-size="lg"] b {
-    font-size: 1.15rem;
+    font-size: 3rem;
   }
   .login-card h1 {
     margin-top: 0.35rem;
