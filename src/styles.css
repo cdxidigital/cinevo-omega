@@ -3137,6 +3137,168 @@ html[data-theme="paper"] {
   }
 }
 
+/* Final landing polish: calm hierarchy, reliable contrast, and tighter responsive rhythm. */
+.public-home {
+  background:
+    radial-gradient(circle at 82% 18%, rgba(121, 232, 245, .06), transparent 26rem),
+    var(--landing-bg);
+}
+
+.public-nav {
+  min-height: 68px;
+  padding-block: 10px;
+}
+
+.public-nav__brand {
+  display: inline-flex;
+  align-items: center;
+  min-width: 132px;
+}
+
+.public-nav nav a,
+.public-nav__signin {
+  position: relative;
+  padding-block: 10px;
+}
+
+.public-nav nav a::after,
+.public-nav__signin::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 3px;
+  left: 0;
+  height: 1px;
+  background: var(--landing-cyan);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform .2s ease;
+}
+
+.public-nav nav a:hover::after,
+.public-nav__signin:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.public-hero {
+  min-height: 820px;
+  padding-bottom: clamp(56px, 8vh, 92px);
+}
+
+.public-hero__content {
+  position: relative;
+  z-index: 1;
+}
+
+.public-hero h1 {
+  max-width: 650px;
+  font-size: clamp(3.2rem, 7vw, 6.25rem);
+  line-height: .92;
+}
+
+.public-hero p {
+  max-width: 500px;
+}
+
+.public-hero__actions {
+  align-items: center;
+}
+
+.public-primary,
+.public-secondary {
+  min-height: 44px;
+  padding-inline: 16px;
+}
+
+.home-reel,
+.home-highlights,
+.home-downloads {
+  width: min(1240px, calc(100% - 48px));
+}
+
+.home-reel > header,
+.home-highlights > header {
+  align-items: end;
+}
+
+.home-reel h2,
+.home-highlights h2,
+.home-manifesto h2,
+.home-closing h2 {
+  max-width: 760px;
+  text-wrap: balance;
+}
+
+.home-reel > header p,
+.home-highlights > header p {
+  max-width: 330px;
+}
+
+.home-library-steps article,
+.home-highlight {
+  outline: none;
+}
+
+.home-library-steps article:focus-within,
+.home-highlight:focus-visible {
+  position: relative;
+  z-index: 2;
+  outline: 2px solid var(--landing-cyan);
+  outline-offset: -2px;
+}
+
+.home-highlight h3,
+.home-library-steps h3 {
+  text-wrap: balance;
+}
+
+@media (max-width: 700px) {
+  .public-nav {
+    min-height: 60px;
+  }
+
+  .public-nav__brand {
+    min-width: 112px;
+  }
+
+  .public-nav__actions {
+    gap: 5px;
+  }
+
+  .public-nav__actions .public-nav__signin {
+    display: none;
+  }
+
+  .public-hero {
+    min-height: 720px;
+    padding-top: 104px;
+  }
+
+  .public-hero h1 {
+    max-width: 355px;
+    font-size: clamp(3rem, 15vw, 4.8rem);
+  }
+
+  .home-reel,
+  .home-highlights,
+  .home-downloads {
+    width: calc(100% - 32px);
+  }
+
+  .home-reel > header,
+  .home-highlights > header {
+    padding-bottom: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .public-nav nav a::after,
+  .public-nav__signin::after {
+    transition: none;
+  }
+}
+
 @media (max-width: 520px) {
   .top-nav__brand {
     min-width: 96px;
