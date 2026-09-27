@@ -2388,6 +2388,86 @@ html[data-theme="paper"] .house-ambient {
   .public-hero__logo .brand[data-size="xl"] small { font-size: 0.62rem; letter-spacing: 0.16em; }
   .public-hero h1 { font-size: clamp(3rem, 6.2vw, 5.8rem); }
 
+  /* Landing reset: calm, editorial, and product-led rather than theatrical. */
+  .public-home {
+    --cine-ink: #15212b;
+    --cine-paper: #fbfaf7;
+    --cine-gold: #087f9b;
+    --cine-gold-soft: #087f9b;
+    background: #f4f7f8;
+    color: #15212b;
+  }
+  .public-home .public-nav {
+    min-height: 68px;
+    padding-inline: clamp(20px, 5vw, 72px);
+    border-bottom: 1px solid #dbe4e8;
+    background: rgb(244 247 248 / 92%);
+    backdrop-filter: blur(18px);
+  }
+  .public-home .public-nav__brand { padding: 6px 10px 6px 4px; }
+  .public-home .public-nav__brand .brand__gem { width: 26px; height: 26px; filter: none; }
+  .public-home .public-nav__brand .brand b { color: #15212b; font-size: 0.86rem; letter-spacing: 0.13em; }
+  .public-home .public-nav nav a { color: #526474; font-size: 0.76rem; font-weight: 600; }
+  .public-home .public-nav nav a:hover { color: #087f9b; }
+  .public-home .public-hero {
+    min-height: 680px;
+    padding: clamp(90px, 12vw, 150px) clamp(20px, 8vw, 120px) 96px;
+    background: #f4f7f8;
+  }
+  .public-home .public-hero__still { opacity: 0.16; filter: saturate(0.55) contrast(0.94) brightness(1.45); }
+  .public-home .public-hero__veil {
+    background: linear-gradient(90deg, #f4f7f8 12%, rgb(244 247 248 / 86%) 48%, rgb(244 247 248 / 28%) 100%), linear-gradient(180deg, #f4f7f8 0%, transparent 24%, #f4f7f8 100%);
+  }
+  .public-home .public-hero__beam,
+  .public-home .public-hero__orbit,
+  .public-home .public-hero__scanline { opacity: 0.08; }
+  .public-home .public-hero__content { max-width: 620px; }
+  .public-home .public-hero__logo { margin-bottom: 28px; }
+  .public-home .public-hero__logo::after { display: none; }
+  .public-home .public-hero__logo .brand__gem { width: 72px; height: 72px; filter: drop-shadow(0 8px 18px rgb(8 127 155 / 18%)); }
+  .public-home .public-hero__logo .brand b { color: #15212b; font-size: clamp(1.8rem, 3vw, 2.7rem); text-shadow: none; }
+  .public-home .public-hero__logo .brand small { color: #087f9b; }
+  .public-home .public-hero h1 { max-width: 560px; margin-bottom: 22px; color: #15212b; font-size: clamp(2.8rem, 5.5vw, 5.2rem); letter-spacing: -0.065em; line-height: 0.98; }
+  .public-home .public-hero h1 em { color: #087f9b; }
+  .public-home .public-hero p { max-width: 500px; color: #526474; font-size: 0.98rem; line-height: 1.65; }
+  .public-home .public-primary { background: #15212b; color: #fff; box-shadow: 0 8px 20px rgb(21 33 43 / 12%); }
+  .public-home .public-secondary { border-color: #c9d8df; color: #15212b; }
+  .public-home .public-secondary:hover { border-color: #087f9b; color: #087f9b; }
+  .public-home .public-hero__note { border-left-color: #087f9b; }
+  .public-home .public-hero__note svg { color: #087f9b; }
+  .public-home .home-reel,
+  .public-home .home-highlights,
+  .public-home .home-downloads { background: #fff; color: #15212b; }
+  .public-home .public-kicker { color: #087f9b; }
+  .public-home .home-library-steps article,
+  .public-home .home-highlight { border-color: #dbe4e8; background: #f7fafb; box-shadow: none; }
+  .public-home .home-library-steps article:hover,
+  .public-home .home-highlight:hover { border-color: #9ccbd5; background: #f1f9fa; transform: translateY(-3px); }
+  .public-home .home-library-steps h3,
+  .public-home .home-highlight h3,
+  .public-home .home-highlights h2,
+  .public-home .home-reel h2 { color: #15212b; }
+  .public-home .home-library-steps p,
+  .public-home .home-highlight p,
+  .public-home .home-reel > header p { color: #526474; }
+  .public-home .public-chapter { background: #e9f1f3; }
+  .public-home .public-chapter__still { opacity: 0.2; filter: saturate(0.5) brightness(1.25); }
+  .public-home .public-chapter__veil { background: linear-gradient(90deg, #e9f1f3 8%, rgb(233 241 243 / 84%) 52%, rgb(233 241 243 / 36%)); }
+  .public-home .home-manifesto h2,
+  .public-home .home-manifesto p,
+  .public-home .home-manifesto__rules b { color: #15212b; }
+  .public-home .home-manifesto h2 em { color: #087f9b; }
+  .public-home .home-manifesto__rules small { color: #526474; }
+  .public-home .home-closing { background: #15212b; }
+
+  @media (max-width: 720px) {
+    .public-home .public-nav { grid-template-columns: 1fr auto; gap: 10px; }
+    .public-home .public-nav nav { display: none; }
+    .public-home .public-hero { min-height: 650px; padding-top: 82px; }
+    .public-home .public-hero__logo .brand__gem { width: 58px; height: 58px; }
+    .public-home .public-hero h1 { font-size: clamp(2.7rem, 13vw, 4rem); }
+  }
+  
   @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -3305,6 +3385,77 @@ html[data-theme="paper"] .house-ambient {
   .login-card .mt-5 { margin-top: 0.55rem; }
   .login-card .mt-3 { margin-top: 0.35rem; }
   .login-card form { gap: 0.45rem; }
+
+/* Final public landing treatment: theme-independent light media house. */
+.public-home {
+  background: #f7f6f2 !important;
+  color: #1d2428 !important;
+}
+.public-home .public-nav {
+  position: relative;
+  background: rgb(247 246 242 / 94%) !important;
+  border-bottom: 1px solid #dedfd9 !important;
+  backdrop-filter: blur(18px);
+}
+.public-home .public-nav nav a,
+.public-home .public-nav__signin { color: #667078 !important; }
+.public-home .public-nav__brand { background: transparent !important; border: 0 !important; box-shadow: none !important; }
+.public-home .public-nav__brand .brand b { color: #1d2428 !important; }
+.public-home .public-nav__enter { background: #1d2428 !important; color: #fff !important; }
+.public-home .public-hero {
+  min-height: 680px !important;
+  background: #f7f6f2 !important;
+  align-items: center;
+}
+.public-home .public-hero__still { opacity: 0.28 !important; filter: saturate(0.45) contrast(0.95) brightness(1.18) !important; clip-path: inset(0 0 0 43%); }
+.public-home .public-hero__veil { background: linear-gradient(90deg, #f7f6f2 0%, #f7f6f2 39%, rgb(247 246 242 / 42%) 78%, rgb(247 246 242 / 4%) 100%) !important; }
+.public-home .public-hero__beam,
+.public-home .public-hero__orbit,
+.public-home .public-hero__scanline,
+.public-home .public-hero__motes { display: none !important; }
+.public-home .public-hero__logo .brand[data-size="xl"] { flex-direction: row; align-items: center; gap: 12px; }
+.public-home .public-hero__logo .brand__gem { width: 48px !important; height: 48px !important; filter: none !important; }
+.public-home .public-hero__logo .brand b { color: #1d2428 !important; font-size: 1.7rem !important; text-shadow: none !important; }
+.public-home .public-hero__logo .brand small { color: #667078 !important; }
+.public-home .public-hero h1 { color: #1d2428 !important; font-size: clamp(3.2rem, 6vw, 6rem) !important; }
+.public-home .public-hero h1 em { color: #527a86 !important; }
+.public-home .public-hero p { color: #667078 !important; }
+.public-home .public-primary { background: #1d2428 !important; color: #fff !important; }
+.public-home .public-secondary { border-color: #c9cbc5 !important; color: #1d2428 !important; background: transparent !important; }
+.public-home .public-hero__note { border-color: #9bb5bc !important; color: #667078 !important; }
+.public-home .public-hero__note svg { color: #527a86 !important; }
+.public-home .home-reel,
+.public-home .home-highlights,
+.public-home .home-downloads { background: #f7f6f2 !important; color: #1d2428 !important; }
+.public-home .home-reel h2,
+.public-home .home-highlights h2,
+.public-home .home-downloads h2,
+.public-home .home-library-steps h3,
+.public-home .home-highlight h3 { color: #1d2428 !important; }
+.public-home .home-library-steps p,
+.public-home .home-highlight p,
+.public-home .home-reel header > p { color: #667078 !important; }
+.public-home .home-library-steps article,
+.public-home .home-highlight { background: #fff !important; border-color: #d5d8d3 !important; color: #1d2428 !important; }
+.public-home .home-highlight em,
+.public-home .home-highlight b { color: #527a86 !important; }
+.public-home .public-chapter { background: #e8eceb !important; }
+.public-home .public-chapter__veil { background: linear-gradient(90deg, rgb(232 236 235 / 96%), rgb(232 236 235 / 76%) 45%, rgb(232 236 235 / 16%)) !important; }
+.public-home .home-manifesto h2,
+.public-home .home-manifesto h2 em,
+.public-home .home-manifesto p,
+.public-home .home-manifesto__rules b { color: #1d2428 !important; }
+.public-home .home-manifesto__rules small { color: #667078 !important; }
+.public-home .home-closing { background: #e8eceb !important; color: #1d2428 !important; }
+.public-home .home-closing h2,
+.public-home .home-closing h2 em { color: #1d2428 !important; }
+.public-home .public-footer { background: #1d2428 !important; }
+@media (max-width: 700px) {
+  .public-home .public-hero { min-height: 680px !important; padding-top: 88px; align-items: flex-end; }
+  .public-home .public-hero__still { clip-path: inset(52% 0 0) !important; opacity: 0.2 !important; }
+  .public-home .public-hero__veil { background: linear-gradient(180deg, #f7f6f2 0%, #f7f6f2 56%, rgb(247 246 242 / 18%) 100%) !important; }
+  .public-home .public-hero h1 { font-size: clamp(3rem, 14vw, 4.7rem) !important; }
+}
   .login-card input,
   .login-card .house-btn,
   .login-card button.h-12 { height: 2.6rem; }
