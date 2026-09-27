@@ -71,6 +71,9 @@ function Home() {
   return (
     <div className="public-home">
       <header className="public-nav">
+        <Link to="/" className="public-nav__brand" aria-label="CINEVO home">
+          <Logo size="sm" tagline={false} />
+        </Link>
         <nav aria-label="Homepage">
           <Link to="/app" search={{ room: "library" }}>
             Your library

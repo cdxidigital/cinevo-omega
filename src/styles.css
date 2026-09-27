@@ -2176,9 +2176,56 @@ html[data-theme="paper"] .house-ambient {
   --cine-red: #b85b4b;
 }
 
-.public-home {
+  .public-home {
+  --cine-ink: #050505;
+  --cine-paper: #f4f1ea;
+  --cine-gold: #e8b96a;
+  --cine-gold-soft: #f3d39a;
   background: var(--cine-ink);
-}
+  }
+  .public-nav__brand {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px 8px 8px;
+  border: 1px solid rgb(255 255 255 / 15%);
+  border-radius: 999px;
+  background: rgb(0 0 0 / 28%);
+  box-shadow: 0 0 28px rgb(232 185 106 / 10%);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms var(--ease-cine);
+  }
+  .public-nav__brand:hover {
+  border-color: rgb(232 185 106 / 62%);
+  box-shadow: 0 0 34px rgb(232 185 106 / 22%);
+  transform: translateY(-1px);
+  }
+  .public-nav__brand .brand { gap: 8px; }
+  .public-nav__brand .brand__gem { width: 30px; height: 30px; filter: drop-shadow(0 0 10px rgb(255 159 28 / 58%)); }
+  .public-nav__brand .brand b { color: var(--cine-paper); font-size: 0.95rem; letter-spacing: 0.15em; }
+  .public-hero__logo {
+  position: relative;
+  animation: cine-logo-arrive 900ms var(--ease-cine) both;
+  }
+  .public-hero__logo::after {
+  position: absolute;
+  inset: -28px -42px;
+  z-index: -1;
+  border: 1px solid rgb(232 185 106 / 30%);
+  border-radius: 50%;
+  box-shadow: 0 0 52px rgb(232 185 106 / 18%), inset 0 0 32px rgb(118 228 255 / 8%);
+  content: "";
+  transform: rotate(-12deg) scaleX(1.22);
+  animation: cine-logo-orbit 8s ease-in-out infinite;
+  }
+  .public-hero__logo .brand__gem { filter: drop-shadow(0 0 18px rgb(255 159 28 / 55%)); }
+  .public-hero__logo .brand b { font-size: clamp(2.5rem, 5vw, 4.5rem); letter-spacing: 0.12em; text-shadow: 0 0 32px rgb(255 255 255 / 18%); }
+  .public-hero__logo .brand small { color: var(--cine-gold-soft); letter-spacing: 0.2em; text-transform: uppercase; }
+  .public-hero h1 span { display: block; animation: cine-title-in 900ms 180ms var(--ease-cine) both; }
+  .public-hero h1 em { display: block; animation: cine-title-in 900ms 320ms var(--ease-cine) both; }
+  @keyframes cine-logo-arrive { from { opacity: 0; transform: translateY(18px) scale(0.92); } to { opacity: 1; transform: none; } }
+  @keyframes cine-logo-orbit { 0%, 100% { transform: rotate(-12deg) scaleX(1.22); opacity: 0.55; } 50% { transform: rotate(8deg) scaleX(1.06); opacity: 1; } }
+  @keyframes cine-title-in { from { opacity: 0; transform: translateY(24px); filter: blur(10px); } to { opacity: 1; transform: none; filter: none; } }
 .public-nav {
   min-height: 72px;
   padding-inline: clamp(20px, 5vw, 72px);
