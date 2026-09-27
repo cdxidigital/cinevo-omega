@@ -88,12 +88,16 @@ export function PlexConnect() {
             setMessage("Plex sign-in timed out. Try again.");
             return;
           }
-          const poll = await plexPollPin({ data: { clientId: clientId(), pinId: res.id } });
-          if (!poll.ok) return;
-          if (!poll.token) return;
-          if (pollRef.current) window.clearInterval(pollRef.current);
-          setPin(null);
-          await refreshServers(poll.token, "");
+          try {
+            const poll = await plexPollPin({ data: { clientId: clientId(), pinId: res.id } });
+            if (!poll || !poll.ok) return;
+            if (!poll.token) return;
+            if (pollRef.current) window.clearInterval(pollRef.current);
+            setPin(null);
+            await refreshServers(poll.token, "");
+          } catch (err) {
+            console.log("[v0] Plex polling error:", err);
+          }
         })();
       }, 1600);
     } catch (err) {
