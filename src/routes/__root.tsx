@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { AuthProvider } from "@/lib/auth/provider";
 import { Rehydrate } from "@/components/cinevo/rehydrate";
 import { Pwa } from "@/components/cinevo/pwa";
+import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "CINEVO";
@@ -51,6 +52,7 @@ export const Route = createRootRoute({
       <body className="bg-cine-bg text-cine-text antialiased">
         <Rehydrate />
         <Pwa />
+        <PreviewHostBridge />
         <AuthProvider>
           <Outlet />
         </AuthProvider>
