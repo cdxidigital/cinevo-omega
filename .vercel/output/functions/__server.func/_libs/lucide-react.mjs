@@ -1,5 +1,5 @@
 import { o as __toESM } from "../_runtime.mjs";
-import { V as require_react } from "./@tanstack/react-router+[...].mjs";
+import { B as require_react } from "./@tanstack/react-router+[...].mjs";
 //#region node_modules/lucide-react/dist/esm/shared/src/utils.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 /**
@@ -194,6 +194,33 @@ var Captions = createLucideIcon("captions", [["rect", {
 	d: "M7 15h4M15 15h2M7 11h2M13 11h4",
 	key: "1ueiar"
 }]]);
+/**
+* @license lucide-react v0.510.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var Cast = createLucideIcon("cast", [
+	["path", {
+		d: "M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6",
+		key: "3zrzxg"
+	}],
+	["path", {
+		d: "M2 12a9 9 0 0 1 8 8",
+		key: "g6cvee"
+	}],
+	["path", {
+		d: "M2 16a5 5 0 0 1 4 4",
+		key: "1y1dii"
+	}],
+	["line", {
+		x1: "2",
+		x2: "2.01",
+		y1: "20",
+		y2: "20",
+		key: "xu2jvo"
+	}]
+]);
 /**
 * @license lucide-react v0.510.0 - ISC
 *
@@ -1064,4 +1091,4 @@ var X = createLucideIcon("x", [["path", {
 	key: "d8bk6v"
 }]]);
 //#endregion
-export { KeyRound as A, Check as B, LoaderCircle as C, Library as D, Link2 as E, Expand as F, ArrowRight as G, Cable as H, Download as I, Activity as J, ArrowLeft as K, Clapperboard as L, House as M, HardDrive as N, LayoutGrid as O, FolderPlus as P, CircleCheck as R, Menu as S, ListPlus as T, Bookmark as U, Captions as V, Bell as W, Server as _, Unplug as a, Play as b, Trash2 as c, Smartphone as d, SkipForward as f, Settings2 as g, ShieldCheck as h, Volume2 as i, Info as j, LayoutList as k, Star as l, Shuffle as m, Wrench as n, Tv as o, SkipBack as p, ArrowDownRight as q, VolumeX as r, TriangleAlert as s, X as t, Square as u, Search as v, List as w, Pause as x, RefreshCw as y, ChevronLeft as z };
+export { KeyRound as A, Check as B, LoaderCircle as C, Library as D, Link2 as E, Expand as F, Bell as G, Captions as H, Download as I, ArrowDownRight as J, ArrowRight as K, Clapperboard as L, House as M, HardDrive as N, LayoutGrid as O, FolderPlus as P, CircleCheck as R, Menu as S, ListPlus as T, Cable as U, Cast as V, Bookmark as W, Activity as Y, Server as _, Unplug as a, Play as b, Trash2 as c, Smartphone as d, SkipForward as f, Settings2 as g, ShieldCheck as h, Volume2 as i, Info as j, LayoutList as k, Star as l, Shuffle as m, Wrench as n, Tv as o, SkipBack as p, ArrowLeft as q, VolumeX as r, TriangleAlert as s, X as t, Square as u, Search as v, List as w, Pause as x, RefreshCw as y, ChevronLeft as z };
