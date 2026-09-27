@@ -87,6 +87,10 @@ function Home() {
         <section className="public-hero" aria-labelledby="public-hero-title">
           <img src="/stills/hero-theater.jpg" alt="" className="public-hero__still" />
           <div className="public-hero__veil" />
+          <div className="public-hero__beam" aria-hidden="true" />
+          <div className="public-hero__orbit public-hero__orbit--one" aria-hidden="true" />
+          <div className="public-hero__orbit public-hero__orbit--two" aria-hidden="true" />
+          <div className="public-hero__scanline" aria-hidden="true" />
           <div className="public-hero__content">
             <Logo size="xl" layout="stacked" tagline={false} className="public-hero__logo" />
             <h1 id="public-hero-title">
