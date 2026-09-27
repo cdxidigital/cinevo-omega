@@ -5,7 +5,6 @@ import { Rehydrate } from "@/components/cinevo/rehydrate";
 import { Pwa } from "@/components/cinevo/pwa";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import appCss from "../styles.css?url";
-import omegaCss from "../styles.omega.css?url";
 
 const APP_NAME = "CINEVO";
 
@@ -42,7 +41,6 @@ export const Route = createRootRoute({
       { rel: "manifest", href: "/manifest.webmanifest" },
       { rel: "apple-touch-icon", href: "/app-icon.png" },
       { rel: "stylesheet", href: appCss },
-      { rel: "stylesheet", href: omegaCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
