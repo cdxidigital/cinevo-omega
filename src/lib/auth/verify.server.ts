@@ -83,7 +83,9 @@ export async function getSessionUser(
  */
 export async function requireUserId(bearerToken?: string): Promise<string> {
   if (!authConfigured && !gateIdentityEnabled()) {
-    if (databaseConfigured) {
+    // Never expose the shared preview identity from a production deployment,
+    // even when a database is temporarily unavailable or auth provisioning is incomplete.
+    if (process.env.NODE_ENV === "production" || databaseConfigured) {
       throw new Error(
         "Auth is disabled (VITE_AUTH_ENABLED=false) but DATABASE_URL is set — " +
           "refusing to fall back to the shared dev user against a real database.",

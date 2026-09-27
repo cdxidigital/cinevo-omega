@@ -14,7 +14,7 @@ export const Route = createFileRoute("/api/art/$ticket")({
           return new Response("Unauthorized", { status: 401 });
         }
         const path = safeArtPath(new URL(request.url).searchParams.get("path") || "");
-        if (!path) return new Response("No artwork", { status: 404 });
+        if (!path || path.length > 512) return new Response("No artwork", { status: 404 });
         const ticket = await loadTicket(params.ticket, userId);
         if (!ticket) return new Response("Artwork expired", { status: 410 });
         const base = ticket.url.replace(/\/$/, "");

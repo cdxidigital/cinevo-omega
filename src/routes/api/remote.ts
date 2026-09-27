@@ -21,6 +21,8 @@ export const Route = createFileRoute("/api/remote")({
   server: {
     handlers: {
       GET: async ({ request }) => {
+        const clientKey = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+        if (!allowRequest(`remote:get:${clientKey}`, 120)) return json({ ok: false, error: "Too many requests. Try again shortly." }, 429);
         const code = normalizeCode(new URL(request.url).searchParams.get("code"));
         if (!code) return json({ ok: false, error: "Enter the six-character code from the house." }, 400);
         let id: string;

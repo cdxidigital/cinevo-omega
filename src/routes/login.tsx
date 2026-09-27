@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Navigate, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { GROK_PROVIDERS, authClient, authEnabled, rememberSessionToken, sessionTokenFromAuthResponse, signIn } from "@/lib/auth/client";
+import { authClient, authEnabled, rememberSessionToken, sessionTokenFromAuthResponse } from "@/lib/auth/client";
 import { Logo } from "@/components/cinevo/logo";
 import { claimUsername } from "@/lib/sharing";
 import { appDestination } from "@/lib/app-destination";
@@ -116,25 +116,9 @@ function Login() {
 
         {authEnabled ? (
           <>
-            <div className="mt-8 grid gap-2">
-              {GROK_PROVIDERS.map((p) => (
-                <button
-                  key={p.providerId}
-                  type="button"
-                  onClick={() => {
-                    void signIn(p.providerId, {
-                      callbackURL: `/app${room || core ? `?${new URLSearchParams({ ...(room ? { room } : {}), ...(core ? { core } : {}) }).toString()}` : ""}`,
-                    }).catch((err: unknown) => {
-                      setError(err instanceof Error ? err.message : "Could not start that sign-in.");
-                    });
-                  }}
-                  className="h-12 rounded-xl border border-cine-border bg-cine-elevated font-ui text-sm font-bold hover:border-cine-cyan"
-                >
-                  Continue with {p.label}
-                </button>
-              ))}
+            <div className="mt-8 rounded-xl border border-cine-border bg-cine-elevated p-4 text-sm text-cine-muted">
+              Sign in securely with your Cinevo account. Your session stays on this app and is never sent to a third-party broker.
             </div>
-            <p className="my-5 text-center font-ui text-xs font-medium uppercase tracking-[0.12em] text-cine-muted">or email</p>
             <form onSubmit={(e) => void submit(e)} className="grid gap-3">
               {mode === "up" ? (
                 <input
