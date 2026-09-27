@@ -59,6 +59,9 @@ export function plexStreamTarget(
     "X-Plex-Platform": "Chrome",
     "X-Plex-Version": "1.0.0",
     "X-Plex-Token": token,
+    // Plex clients commonly read the token from the query string when the
+    // request is made through a reverse proxy or transcoder.
+    "X-Plex-Session-Identifier": `cinevo-${client}`.slice(0, 64),
   });
   if (compatible) {
     params.set("videoCodec", "h264");

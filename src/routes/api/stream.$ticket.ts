@@ -23,7 +23,7 @@ function passHeaders(upstream: Response, download: boolean) {
   }
   if (!out.has("Accept-Ranges")) out.set("Accept-Ranges", "bytes");
   if (!out.has("Content-Type")) out.set("Content-Type", "video/mp4");
-  out.set("Cache-Control", "private, no-transform, max-age=7200");
+  out.set("Cache-Control", "private, no-store, no-transform");
   if (download) out.set("Content-Disposition", 'attachment; filename="cinevo-original.mp4"');
   return out;
 }
@@ -47,7 +47,7 @@ export const Route = createFileRoute("/api/stream/$ticket")({
         try {
           upstream = await fetch(ticket.url, {
             headers: upstreamHeaders(ticket.headers, range),
-            redirect: "manual",
+            redirect: "follow",
           });
         } catch {
           return new Response("CINEVO could not reach that media server.", { status: 502 });
@@ -71,17 +71,18 @@ export const Route = createFileRoute("/api/stream/$ticket")({
         const ticket = await loadTicket(params.ticket, userId);
         if (!ticket) return new Response(null, { status: 410 });
         const range = request.headers.get("range") || "";
+        if (range.length > 128 || /[\r\n]/.test(range)) return new Response(null, { status: 400 });
         try {
           let upstream = await fetch(ticket.url, {
             method: "HEAD",
             headers: upstreamHeaders(ticket.headers, range),
-            redirect: "manual",
+            redirect: "follow",
           });
           if (upstream.status === 405 || upstream.status === 501) {
             upstream = await fetch(ticket.url, {
               method: "GET",
               headers: upstreamHeaders(ticket.headers, range || "bytes=0-1"),
-              redirect: "manual",
+              redirect: "follow",
             });
             await upstream.body?.cancel();
           }
