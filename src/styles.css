@@ -2571,6 +2571,7 @@ html[data-theme="paper"] .house-ambient {
 .brand > span:last-child {
   display: grid;
   gap: 3px;
+  place-items: center;
 }
 .brand b {
   font-family: var(--font-lockup), "Montserrat", system-ui, sans-serif;
