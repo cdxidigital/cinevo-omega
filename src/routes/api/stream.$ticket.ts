@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { requireUserId } from "@/lib/auth/verify.server";
 import { loadTicket } from "@/lib/playback.server";
+import { serverAddressError } from "@/lib/playback-urls";
 
 function isVideoResponse(status: number, type: string) {
   if (status !== 200 && status !== 206) return false;
@@ -45,10 +46,12 @@ export const Route = createFileRoute("/api/stream/$ticket")({
         if (range.length > 128 || /[\r\n]/.test(range)) return new Response("Invalid range", { status: 400 });
         let upstream: Response;
         try {
+          if (serverAddressError(ticket.url)) return new Response("Media server address is not allowed.", { status: 502 });
           upstream = await fetch(ticket.url, {
             headers: upstreamHeaders(ticket.headers, range),
-            redirect: "follow",
+            redirect: "manual",
           });
+          if (upstream.status >= 300 && upstream.status < 400) return new Response("Media redirect rejected.", { status: 502 });
         } catch {
           return new Response("CINEVO could not reach that media server.", { status: 502 });
         }
@@ -73,17 +76,20 @@ export const Route = createFileRoute("/api/stream/$ticket")({
         const range = request.headers.get("range") || "";
         if (range.length > 128 || /[\r\n]/.test(range)) return new Response(null, { status: 400 });
         try {
+          if (serverAddressError(ticket.url)) return new Response(null, { status: 502 });
           let upstream = await fetch(ticket.url, {
             method: "HEAD",
             headers: upstreamHeaders(ticket.headers, range),
-            redirect: "follow",
+            redirect: "manual",
           });
+          if (upstream.status >= 300 && upstream.status < 400) return new Response(null, { status: 502 });
           if (upstream.status === 405 || upstream.status === 501) {
             upstream = await fetch(ticket.url, {
               method: "GET",
               headers: upstreamHeaders(ticket.headers, range || "bytes=0-1"),
-              redirect: "follow",
+              redirect: "manual",
             });
+            if (upstream.status >= 300 && upstream.status < 400) return new Response(null, { status: 502 });
             await upstream.body?.cancel();
           }
           if (upstream.status !== 200 && upstream.status !== 206) {

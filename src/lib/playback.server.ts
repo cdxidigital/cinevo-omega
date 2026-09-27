@@ -1,5 +1,22 @@
 import { getSql } from "@/lib/db";
+import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
 import { jellyfinStreamTarget, nodeStreamTarget, plexStreamTarget, serverAddressError, type PlaybackFit } from "@/lib/playback-urls";
+
+const ticketKey = createHash("sha256").update(process.env.BETTER_AUTH_SECRET || "cinevo-preview-ticket-key").digest();
+function encryptTicket(value: string) {
+  const iv = randomBytes(12);
+  const cipher = createCipheriv("aes-256-gcm", ticketKey, iv);
+  const encrypted = Buffer.concat([cipher.update(value, "utf8"), cipher.final()]);
+  return `${iv.toString("base64url")}.${cipher.getAuthTag().toString("base64url")}.${encrypted.toString("base64url")}`;
+}
+function decryptTicket(value: string) {
+  try {
+    const [iv, tag, payload] = value.split(".").map((part) => Buffer.from(part, "base64url"));
+    const decipher = createDecipheriv("aes-256-gcm", ticketKey, iv);
+    decipher.setAuthTag(tag);
+    return Buffer.concat([decipher.update(payload), decipher.final()]).toString("utf8");
+  } catch { return null; }
+}
 
 function ticketId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -39,7 +56,7 @@ export async function createTicket(input: {
   await sql`delete from cinevo_play_tickets where expires_at < now()`;
   await sql`
     insert into cinevo_play_tickets (id, user_id, provider, url, headers, expires_at)
-    values (${id}, ${input.userId}, ${input.provider}, ${target.url}, ${JSON.stringify(target.headers)}, ${expires}::timestamptz)
+    values (${id}, ${input.userId}, ${input.provider}, ${target.url}, ${encryptTicket(JSON.stringify(target.headers))}, ${expires}::timestamptz)
   `;
   return { ok: true as const, src: `/api/stream/${id}` };
 }
@@ -58,9 +75,13 @@ export async function loadTicket(id: string, userId: string) {
   if (!row) return null;
   let headers: Record<string, string> = {};
   try {
-    headers = (typeof row.headers === "string" ? JSON.parse(row.headers) : row.headers) as Record<string, string>;
+    const rawHeaders = typeof row.headers === "string" ? decryptTicket(row.headers) : null;
+    headers = rawHeaders ? JSON.parse(rawHeaders) as Record<string, string> : {};
   } catch {
     headers = {};
   }
-  return { url: row.url, headers };
+  if (!Object.keys(headers).length) return null;
+  const allowedHeaders = new Set(["accept", "x-plex-token", "x-plex-product", "x-plex-client-identifier", "x-plex-platform", "x-emby-token", "authorization"]);
+  const safeHeaders = Object.fromEntries(Object.entries(headers).filter(([key, value]) => allowedHeaders.has(key.toLowerCase()) && typeof value === "string" && value.length <= 2048));
+  return { url: row.url, headers: safeHeaders };
 }

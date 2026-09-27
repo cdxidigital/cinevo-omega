@@ -50,10 +50,9 @@ function token() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID().replace(/-/g, "").slice(0, 12);
   }
-  const alphabet = "abcdefghjkmnpqrstuvwxyz23456789";
-  let out = "";
-  for (let i = 0; i < 12; i++) out += alphabet[Math.floor(Math.random() * alphabet.length)];
-  return out;
+  const bytes = new Uint8Array(12);
+  globalThis.crypto.getRandomValues(bytes);
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("").slice(0, 12);
 }
 
 export function normalizeUsername(value: string) {
@@ -129,12 +128,14 @@ export const bumpWatch = createServerFn({ method: "POST" })
     } else {
       streak = 1;
     }
+    if (last === today) return { ok: true as const, streak, xp: Number(rows[0].xp) };
     const xp = Number(rows[0].xp) + 12;
-    await sql`
-      update cinevo_profiles set streak = ${streak}, xp = ${xp}, last_watch = ${today}::date
-      where user_id = ${context.userId}
+    const updated = await sql<{ xp: number; streak: number }>`
+      update cinevo_profiles set streak = ${streak}, xp = xp + 12, last_watch = ${today}::date
+      where user_id = ${context.userId} and (last_watch is null or last_watch < ${today}::date)
+      returning xp, streak
     `;
-    return { ok: true as const, streak, xp };
+    return { ok: true as const, streak: Number(updated[0]?.streak ?? streak), xp: Number(updated[0]?.xp ?? xp) };
   });
 
 export const lookupUsername = createServerFn({ method: "POST" })
@@ -154,12 +155,12 @@ export const createShare = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator((input: { guestName: string; days: number; libraries: string[]; titles: SharedTitle[] }) => input)
   .handler(async ({ data, context }) => {
-    const guest = normalizeUsername(data.guestName);
+    const guest = normalizeUsername(String(data.guestName || "").slice(0, 20));
     if (!USERNAME_RE.test(guest)) {
       return { ok: false as const, error: "Name the friend by their CINEVO username." };
     }
     const days = Math.min(30, Math.max(1, Number(data.days) || 7));
-    const libraries = (data.libraries || []).slice(0, 12);
+    const libraries = (data.libraries || []).slice(0, 12).map((value) => String(value).slice(0, 80));
     const titles = (data.titles || []).slice(0, 200).map((t) => ({
       id: String(t.id || "").slice(0, 80),
       title: String(t.title || "Untitled").slice(0, 160),
@@ -170,6 +171,9 @@ export const createShare = createServerFn({ method: "POST" })
       source: t.source === "jellyfin" ? "jellyfin" : t.source === "folder" ? "folder" : "plex",
       sourceLabel: String(t.sourceLabel || t.source).slice(0, 80),
     }));
+    if (JSON.stringify({ libraries, titles }).length > 250_000) {
+      return { ok: false as const, error: "That share is too large." };
+    }
     const sql = await getSql();
     const guestRow = await sql<{ username: string }>`
       select username from cinevo_profiles where lower(username) = ${guest.toLowerCase()}
@@ -284,6 +288,8 @@ export const setShareStatus = createServerFn({ method: "POST" })
 export const openShare = createServerFn({ method: "POST" })
   .validator((input: { token: string }) => input)
   .handler(async ({ data }) => {
+    const shareToken = String(data.token || "").trim();
+    if (!/^[a-f0-9]{12}$/.test(shareToken)) return { ok: false as const, error: "That invite is not valid." };
     const sql = await getSql();
     const rows = await sql<{
       token: string;
@@ -296,7 +302,7 @@ export const openShare = createServerFn({ method: "POST" })
       owner_id: string;
     }>`
       select token, guest_name, libraries, titles, days, status, expires_at::text, owner_id
-      from cinevo_shares where token = ${data.token.trim()}
+      from cinevo_shares where token = ${shareToken}
     `;
     const row = rows[0];
     if (!row) return { ok: false as const, error: "That invite is not valid." };

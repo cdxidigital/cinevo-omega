@@ -8,17 +8,18 @@ export function isLoopbackUrl(url?: string) {
   }
 }
 
-/** Reject schemes and cloud-metadata hosts. Private LAN addresses stay allowed. */
+/** Validate media-server URLs without allowing cloud metadata or private targets. */
 export function serverAddressError(uri: string) {
   let url: URL;
-  try {
-    url = new URL(uri);
-  } catch {
-    return "That server address is not allowed.";
-  }
+  try { url = new URL(uri); } catch { return "That server address is not allowed."; }
   if (url.protocol !== "http:" && url.protocol !== "https:") return "That server address is not allowed.";
-  const host = url.hostname.toLowerCase();
-  if (host === "169.254.169.254" || host === "metadata.google.internal") return "That server address is not allowed.";
+  const host = url.hostname.toLowerCase().replace(/^\[|\]$/g, "");
+  if (!host || host === "localhost" || host.endsWith(".local") || host === "metadata.google.internal") return "That server address is not allowed.";
+  if (/^(127\.|10\.|192\.168\.|169\.254\.|0\.)/.test(host)) return "That server address is not allowed.";
+  const octets = host.split(".").map(Number);
+  if (octets.length === 4 && octets.every((n) => Number.isInteger(n) && n >= 0 && n <= 255) &&
+      (octets[0] === 172 && octets[1] >= 16 && octets[1] <= 31 || octets[0] === 100 && octets[1] >= 64 && octets[1] <= 127)) return "That server address is not allowed.";
+  if (host === "::1" || host.startsWith("fc") || host.startsWith("fd") || host.startsWith("fe80:")) return "That server address is not allowed.";
   return null;
 }
 
