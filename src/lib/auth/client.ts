@@ -1,4 +1,5 @@
 import { createAuthClient } from "better-auth/react";
+import { genericOAuthClient } from "better-auth/client/plugins";
 import { runPreSignInSignOut, runSignOut } from "../../../scripts/sign-out-plan.mjs";
 
 /**
@@ -16,7 +17,7 @@ import { runPreSignInSignOut, runSignOut } from "../../../scripts/sign-out-plan.
  * the visitor stays signed in.
  */
 export const authClient = createAuthClient({
-  plugins: [],
+  plugins: [genericOAuthClient()],
   fetchOptions: {
     onRequest(ctx) {
       const token = getBearerToken();

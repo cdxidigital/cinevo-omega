@@ -42,6 +42,7 @@ export const Route = createFileRoute("/api/stream/$ticket")({
         if (!ticket) return new Response("Playback expired", { status: 410 });
         const download = new URL(request.url).searchParams.get("download") === "1";
         const range = request.headers.get("range") || "";
+        if (range.length > 128 || /[\r\n]/.test(range)) return new Response("Invalid range", { status: 400 });
         let upstream: Response;
         try {
           upstream = await fetch(ticket.url, {
