@@ -5,7 +5,9 @@ function ticketId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID().replace(/-/g, "");
   }
-  return `p${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
+  const bytes = new Uint8Array(24);
+  globalThis.crypto.getRandomValues(bytes);
+  return `p${Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
 }
 
 export async function createTicket(input: {
