@@ -1,25 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  --color-cine-bg: #07090d;
-  --color-cine-elevated: #10151d;
-  --color-cine-surface: #151d29;
-  --color-cine-well: #0b1017;
-  --color-cine-border: #263548;
-  --color-cine-line: #354861;
-  --color-cine-text: #f5f8ff;
-  --color-cine-muted: #b9c7d8;
-  --color-cine-faint: #8293a8;
-  --color-cine-cyan: #76e4ff;
-  --color-cine-accent-ink: #06151d;
-  --color-cine-play: #76e4ff;
-  --color-cine-play-ink: #06151d;
-  --color-cine-magenta: #ff6f9d;
-  --color-cine-violet: #b99bff;
-  --color-cine-blue: #78a9ff;
-  --color-cine-amber: #ffc477;
-  --color-cine-lime: #a9f5c5;
-  --color-cine-danger: #ff91a8;
+  --color-cine-bg: #eef3f7;
+  --color-cine-elevated: #ffffff;
+  --color-cine-surface: #f8fafc;
+  --color-cine-well: #e5edf3;
+  --color-cine-border: #d1dce5;
+  --color-cine-line: #bacbd8;
+  --color-cine-text: #142331;
+  --color-cine-muted: #526474;
+  --color-cine-faint: #738594;
+  --color-cine-cyan: #087f9b;
+  --color-cine-accent-ink: #ffffff;
+  --color-cine-play: #142331;
+  --color-cine-play-ink: #ffffff;
+  --color-cine-magenta: #d9467a;
+  --color-cine-violet: #7257c7;
+  --color-cine-blue: #3f78c5;
+  --color-cine-amber: #c47718;
+  --color-cine-lime: #25845a;
+  --color-cine-danger: #c3264d;
   --font-display: "Inter", system-ui, sans-serif;
   --font-lockup: "Montserrat", "Inter", system-ui, sans-serif;
   --font-ui: "Inter", system-ui, sans-serif;
@@ -41,9 +41,9 @@
   body,
   #app {
     background:
-      radial-gradient(circle at 15% -10%, color-mix(in srgb, var(--color-cine-cyan) 10%, transparent), transparent 34rem),
-      radial-gradient(circle at 90% 0%, color-mix(in srgb, var(--color-cine-violet) 8%, transparent), transparent 30rem),
-      var(--color-cine-bg);
+      radial-gradient(circle at 8% 0%, color-mix(in srgb, var(--color-cine-cyan) 13%, transparent), transparent 34rem),
+      radial-gradient(circle at 92% 6%, color-mix(in srgb, var(--color-cine-violet) 10%, transparent), transparent 30rem),
+      linear-gradient(135deg, var(--color-cine-bg) 0%, #f7fafc 52%, #e9f1f5 100%);
     color: var(--color-cine-text);
     min-height: 100%;
   }
@@ -2342,7 +2342,53 @@ html[data-theme="paper"] .house-ambient {
   .public-hero__actions { flex-wrap: wrap; }
 }
 
-@media (prefers-reduced-motion: reduce) {
+/* Keep the public header on one calm, intentional line. */
+.public-nav {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(20px, 4vw, 64px);
+  min-height: 76px;
+}
+.public-nav nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+.public-nav__actions { justify-self: end; white-space: nowrap; }
+.public-nav__actions > div { display: flex; align-items: center; }
+.public-nav__signin,
+.public-nav__enter {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding-inline: 16px;
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.public-nav__signin { color: rgb(244 241 234 / 78%); }
+.public-nav__enter { color: #071018; background: var(--cine-paper); box-shadow: 0 8px 24px rgb(0 0 0 / 18%); }
+@media (max-width: 700px) {
+  .public-nav { grid-template-columns: auto 1fr; gap: 12px; }
+  .public-nav nav { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; padding-bottom: 12px; }
+  .public-nav__actions { grid-column: 2; grid-row: 1; }
+  .public-nav__brand { padding: 6px 10px 6px 6px; }
+  .public-nav__brand .brand b { font-size: 0.82rem; }
+}
+
+  /* Compact hero lockup: let the mark carry the identity while the headline stays editorial. */
+  .public-hero__logo .brand[data-size="xl"] { gap: 10px; }
+  .public-hero__logo .brand[data-size="xl"] .brand__gem { width: 82px; height: 82px; }
+  .public-hero__logo .brand[data-size="xl"] b { font-size: clamp(1.9rem, 3.2vw, 3.2rem); letter-spacing: 0.08em; }
+  .public-hero__logo .brand[data-size="xl"] small { font-size: 0.62rem; letter-spacing: 0.16em; }
+  .public-hero h1 { font-size: clamp(3rem, 6.2vw, 5.8rem); }
+
+  @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {

@@ -26,7 +26,7 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { title: `${APP_NAME} — Your media. Your moment.` },
-      { name: "theme-color", content: "#050505" },
+      { name: "theme-color", content: "#eef3f7" },
       {
         name: "description",
         content: "CINEVO — Cinema, reinvented. Your library. No ads. No subscriptions.",

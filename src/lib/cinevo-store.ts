@@ -184,7 +184,7 @@ const DEFAULT_PREFS: Preferences = {
   zenMode: false,
   focusMode: false,
   audioHints: true,
-  theme: "pulse",
+  theme: "day",
   dashboardWidgets: [...DEFAULT_DASHBOARD_WIDGETS],
   introSkip: 0,
   subtitleOffset: 0,
