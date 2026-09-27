@@ -1,1 +1,0 @@
-var e=[`movies`,`shows`,`library`,`tools`,`browse`],t=[`libraries`,`sharing`,`stewardship`,`ai`];function n(n){let r=e.includes(n.room)?n.room:void 0,i=t.includes(n.core)?n.core:void 0;return{...r?{room:r}:{},...i?{core:i}:{}}}function r(e){if(e)return e===`library`?`sidebar`:e}function i(e){if(e!==`stage`)return e===`sidebar`?`library`:e}export{i as n,r,n as t};
