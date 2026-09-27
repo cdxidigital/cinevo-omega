@@ -83,6 +83,7 @@ type BeforeInstallPromptEvent = Event & {
 
 let deferred: BeforeInstallPromptEvent | null = null;
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function rememberInstallPrompt(event: BeforeInstallPromptEvent) {
   deferred = event;
   window.dispatchEvent(new Event("cinevo-install"));

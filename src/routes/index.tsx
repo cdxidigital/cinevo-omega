@@ -71,6 +71,9 @@ function Home() {
   return (
     <div className="public-home">
       <header className="public-nav">
+        <Link to="/" className="public-nav__brand" aria-label="CINEVO home">
+          <Logo size="sm" tagline={false} />
+        </Link>
         <nav aria-label="Homepage">
           <Link to="/app" search={{ room: "library" }}>
             Your library
@@ -87,6 +90,10 @@ function Home() {
         <section className="public-hero" aria-labelledby="public-hero-title">
           <img src="/stills/hero-theater.jpg" alt="" className="public-hero__still" />
           <div className="public-hero__veil" />
+          <div className="public-hero__beam" aria-hidden="true" />
+          <div className="public-hero__orbit public-hero__orbit--one" aria-hidden="true" />
+          <div className="public-hero__orbit public-hero__orbit--two" aria-hidden="true" />
+          <div className="public-hero__scanline" aria-hidden="true" />
           <div className="public-hero__content">
             <Logo size="xl" layout="stacked" tagline={false} className="public-hero__logo" />
             <h1 id="public-hero-title">

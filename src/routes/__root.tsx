@@ -27,7 +27,11 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { title: `${APP_NAME} — Your media. Your moment.` },
-      { name: "theme-color", content: "#050505" },
+      { name: "theme-color", content: "#eef3f7" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "default" },
+      { name: "apple-mobile-web-app-title", content: APP_NAME },
       {
         name: "description",
         content: "CINEVO — Cinema, reinvented. Your library. No ads. No subscriptions.",
@@ -35,6 +39,7 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+      { rel: "manifest", href: "/manifest.webmanifest" },
       { rel: "apple-touch-icon", href: "/app-icon.png" },
       { rel: "stylesheet", href: appCss },
       { rel: "stylesheet", href: omegaCss },
