@@ -12,7 +12,7 @@ function Privacy() {
     >
       <section>
         <h2>Account</h2>
-        <p>Sign-in uses Google, X, or email and a password. Your username is how friends address a share. It is not a public profile.</p>
+        <p>Sign-in uses your email and password. Your username is how friends address a share. It is not a public profile.</p>
       </section>
       <section>
         <h2>Libraries</h2>

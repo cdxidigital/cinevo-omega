@@ -12,7 +12,7 @@ function Help() {
     >
       <section>
         <h2>Sign in</h2>
-        <p>Use Google, X, or email and a password. After that, claim a username so friends can share a catalog with you.</p>
+        <p>Use your email and password. After that, claim a username so friends can share a catalog with you.</p>
       </section>
       <section>
         <h2>Add a library</h2>
