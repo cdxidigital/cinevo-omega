@@ -2628,6 +2628,88 @@ html[data-theme="paper"] .house-ambient {
 .top-nav__brand .brand b { font-size: 1.05rem; letter-spacing: 0.045em; }
 .public-footer .public-brand .brand[data-layout="stacked"] .brand__gem { width: 80px; height: 80px; }
 
+/* Streaming-inspired finish: saturated accent rails against a calm charcoal canvas. */
+html[data-theme="pulse"] .public-home,
+html[data-theme="nova"] .public-home,
+.public-home {
+  --cine-ink: #090a10;
+  --cine-paper: #f7f8ff;
+  --cine-gold: #b8ff2c;
+  --cine-gold-soft: #d7ff72;
+  --cine-neon-cyan: #37e7ff;
+  --cine-neon-pink: #ff4fa3;
+  --cine-neon-violet: #8d6bff;
+  background: #090a10;
+  color: var(--cine-paper);
+}
+.public-home .public-nav {
+  border-bottom-color: rgb(255 255 255 / 8%);
+  background: rgb(9 10 16 / 84%);
+  backdrop-filter: blur(22px) saturate(150%);
+}
+.public-home .public-nav__brand .brand__gem,
+.public-home .public-hero__logo .brand__gem {
+  filter: drop-shadow(0 0 12px rgb(55 231 255 / 62%)) drop-shadow(0 0 24px rgb(255 79 163 / 24%));
+}
+.public-home .public-nav__brand .brand b { color: #fff; }
+.public-home .public-nav nav a { color: rgb(247 248 255 / 66%); }
+.public-home .public-nav nav a:hover { color: var(--cine-neon-cyan); }
+.public-home .public-hero {
+  min-height: 720px;
+  background: radial-gradient(circle at 72% 32%, rgb(141 107 255 / 17%), transparent 28rem), #090a10;
+}
+.public-home .public-hero__still { opacity: 0.34; filter: saturate(0.9) contrast(1.08) brightness(0.42); }
+.public-home .public-hero__veil {
+  background: linear-gradient(90deg, #090a10 8%, rgb(9 10 16 / 86%) 42%, rgb(9 10 16 / 20%) 100%), linear-gradient(180deg, rgb(9 10 16 / 72%), transparent 36%, #090a10 100%);
+}
+.public-home .public-hero__beam { background: linear-gradient(105deg, transparent 28%, rgb(55 231 255 / 18%), transparent 72%); opacity: 0.9; }
+.public-home .public-hero__orbit--one { border-color: rgb(55 231 255 / 50%); }
+.public-home .public-hero__orbit--two { border-color: rgb(255 79 163 / 42%); }
+.public-home .public-hero__scanline { opacity: 0.18; background: linear-gradient(90deg, transparent, rgb(215 255 114 / 65%), transparent); }
+.public-home .public-hero__logo .brand b { color: #fff; text-shadow: 0 0 24px rgb(55 231 255 / 22%); }
+.public-home .public-hero__logo .brand small,
+.public-home .public-kicker { color: var(--cine-neon-cyan); }
+.public-home .public-hero h1 { color: #fff; }
+.public-home .public-hero h1 em,
+.public-home .home-manifesto h2 em { color: var(--cine-gold-soft); text-shadow: 0 0 24px rgb(215 255 114 / 22%); }
+.public-home .public-hero p,
+.public-home .home-reel > header p { color: rgb(247 248 255 / 68%); }
+.public-home .public-primary { background: var(--cine-gold); color: #101307; box-shadow: 0 0 0 1px rgb(215 255 114 / 50%), 0 10px 30px rgb(215 255 114 / 18%); }
+.public-home .public-primary:hover { background: #e0ff91; transform: translateY(-2px); }
+.public-home .public-secondary { border-color: rgb(55 231 255 / 45%); color: #fff; }
+.public-home .public-secondary:hover { border-color: var(--cine-neon-cyan); color: var(--cine-neon-cyan); }
+.public-home .public-hero__note { border-left-color: var(--cine-neon-pink); }
+.public-home .public-hero__note svg { color: var(--cine-neon-pink); }
+.public-home .home-reel,
+.public-home .home-highlights,
+.public-home .home-downloads { background: #0e1018; color: #fff; }
+.public-home .home-library-steps article,
+.public-home .home-highlight { border-color: rgb(255 255 255 / 11%); background: linear-gradient(145deg, rgb(255 255 255 / 6%), rgb(255 255 255 / 2%)); box-shadow: 0 16px 42px rgb(0 0 0 / 18%); }
+.public-home .home-library-steps article:nth-child(2) .home-library-steps__number,
+.public-home .home-highlight:nth-child(2) > span { color: var(--cine-neon-pink); }
+.public-home .home-library-steps article:hover,
+.public-home .home-highlight:hover { border-color: var(--cine-neon-cyan); background: rgb(55 231 255 / 7%); box-shadow: 0 0 30px rgb(55 231 255 / 11%); }
+.public-home .home-library-steps h3,
+.public-home .home-highlight h3,
+.public-home .home-highlights h2,
+.public-home .home-reel h2 { color: #fff; }
+.public-home .home-library-steps p,
+.public-home .home-highlight p { color: rgb(247 248 255 / 62%); }
+.public-home .public-chapter { background: #12101d; }
+.public-home .public-chapter__veil { background: linear-gradient(90deg, #12101d 5%, rgb(18 16 29 / 82%) 48%, rgb(18 16 29 / 28%)); }
+.public-home .home-manifesto h2,
+.public-home .home-manifesto p,
+.public-home .home-manifesto__rules b { color: #fff; }
+.public-home .home-manifesto__rules > div { border-top-color: rgb(255 79 163 / 30%); }
+.public-home .home-manifesto__rules svg { color: var(--cine-neon-pink); }
+.public-home .home-closing { background: linear-gradient(135deg, #151126, #090a10 58%); }
+@media (max-width: 720px) {
+  .public-home .public-hero { min-height: 680px; padding-top: 74px; }
+  .public-home .public-hero__still { opacity: 0.24; }
+  .public-home .public-hero h1 { font-size: clamp(2.8rem, 13vw, 4.2rem); }
+  .public-home .public-hero__actions { gap: 10px; }
+}
+
 .poster-stamp {
   pointer-events: none;
   position: absolute;
