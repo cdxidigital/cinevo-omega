@@ -2597,6 +2597,87 @@ html[data-theme="paper"] .house-ambient {
   filter: none;
   transition: transform 220ms var(--ease-cine), filter 220ms var(--ease-cine);
 }
+
+/* Landing refresh: quiet editorial media-house, with the product—not effects—doing the talking. */
+.public-home {
+  background: #f7f6f2;
+  color: #1d2428;
+}
+.public-home .public-nav {
+  position: relative;
+  z-index: 5;
+  min-height: 68px;
+  padding-inline: clamp(22px, 5vw, 76px);
+  border-bottom: 1px solid #dedfd9;
+  background: #f7f6f2;
+}
+.public-home .public-nav__brand {
+  padding: 0;
+  border: 0;
+  color: #1d2428;
+  box-shadow: none;
+  transform: none;
+}
+.public-home .public-nav__brand:hover { border: 0; box-shadow: none; transform: none; }
+.public-home .public-nav__brand .brand__gem { width: 25px; height: 25px; filter: none; }
+.public-home .public-nav__brand .brand b { color: #1d2428; font-size: 0.9rem; letter-spacing: 0.12em; }
+.public-home .public-nav nav { gap: 26px; }
+.public-home .public-nav nav a { color: #667078; font-size: 0.75rem; letter-spacing: 0.02em; }
+.public-home .public-nav nav a::after { background: #1d2428; bottom: -8px; }
+.public-home .public-nav__signin { color: #667078; }
+.public-home .public-nav__enter { min-height: 36px; padding-inline: 14px; color: #fff; background: #1d2428; box-shadow: none; font-size: 0.68rem; }
+.public-home .public-hero {
+  min-height: 0;
+  padding: clamp(82px, 12vw, 150px) clamp(22px, 9vw, 148px) clamp(72px, 9vw, 124px);
+  background: #f7f6f2;
+}
+.public-home .public-hero__still { opacity: 0.9; filter: saturate(0.78) contrast(0.96) brightness(1.08); clip-path: inset(0 0 0 43%); }
+.public-home .public-hero__veil { background: linear-gradient(90deg, #f7f6f2 0%, #f7f6f2 39%, rgb(247 246 242 / 38%) 72%, rgb(247 246 242 / 5%)); }
+.public-home .public-hero__beam,
+.public-home .public-hero__orbit,
+.public-home .public-hero__scanline { display: none; }
+.public-home .public-hero__content { max-width: 590px; }
+.public-home .public-hero__logo { margin-bottom: 28px; }
+.public-home .public-hero__logo::after { display: none; }
+.public-home .public-hero__logo .brand[data-size="xl"] { flex-direction: row; align-items: center; gap: 12px; }
+.public-home .public-hero__logo .brand[data-size="xl"] .brand__gem { width: 48px; height: 48px; filter: none; }
+.public-home .public-hero__logo .brand[data-size="xl"] b { color: #1d2428; font-size: clamp(1.4rem, 2.8vw, 2.2rem); letter-spacing: 0.1em; }
+.public-home .public-hero__logo .brand[data-size="xl"] small { color: #667078; font-size: 0.57rem; }
+.public-home .public-hero h1 { max-width: 530px; color: #1d2428; font-size: clamp(3.25rem, 6.3vw, 6.3rem); line-height: 0.94; letter-spacing: -0.08em; }
+.public-home .public-hero h1 em { color: #527a86; }
+.public-home .public-hero p { max-width: 430px; color: #667078; font-size: 0.96rem; line-height: 1.65; }
+.public-home .public-primary { background: #1d2428; box-shadow: none; }
+.public-home .public-secondary { border-color: #c9cbc5; color: #1d2428; }
+.public-home .public-hero__note { border-color: #9bb5bc; }
+.public-home .public-hero__note svg { color: #527a86; }
+.public-home .home-reel,
+.public-home .home-highlights,
+.public-home .home-downloads { background: #f7f6f2; color: #1d2428; }
+.public-home .home-reel { border-top: 1px solid #dedfd9; }
+.public-home .public-kicker { color: #527a86; }
+.public-home .home-reel h2,
+.public-home .home-highlights h2,
+.public-home .home-downloads h2 { color: #1d2428; }
+.public-home .home-library-steps > article,
+.public-home .home-highlight { border-color: #d5d8d3; background: #fff; box-shadow: none; }
+.public-home .home-library-steps > article:hover,
+.public-home .home-highlight:hover { border-color: #9bb5bc; transform: translateY(-3px); }
+.public-home .public-chapter { background: #e8eceb; }
+.public-home .public-chapter__veil { background: linear-gradient(90deg, rgb(232 236 235 / 96%), rgb(232 236 235 / 76%) 45%, rgb(232 236 235 / 16%)); }
+.public-home .home-manifesto h2,
+.public-home .home-manifesto h2 em { color: #1d2428; }
+.public-home .home-manifesto h2 em { color: #527a86; }
+.public-home .home-closing { background: #e5eceb; color: #1d2428; }
+.public-home .home-closing h2,
+.public-home .home-closing h2 em { color: #1d2428; }
+.public-home .public-footer { background: #1d2428; }
+@media (max-width: 700px) {
+  .public-home .public-hero { padding-top: 70px; }
+  .public-home .public-hero__still { clip-path: inset(52% 0 0); opacity: 0.28; }
+  .public-home .public-hero__veil { background: linear-gradient(180deg, #f7f6f2 0%, #f7f6f2 56%, rgb(247 246 242 / 18%) 100%); }
+  .public-home .public-hero__logo .brand[data-size="xl"] .brand__gem { width: 40px; height: 40px; }
+  .public-home .public-nav nav { gap: 16px; }
+}
 .poster-frame:hover img,
 .poster-frame:focus-within img {
   filter: none;
