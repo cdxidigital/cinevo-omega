@@ -87,7 +87,12 @@ if (process.env.NODE_ENV === "production" && authConfigured && !authSecret) {
 const explicitBaseURL = env("BETTER_AUTH_URL");
 // Explicit `string[]` (not a readonly tuple) — Better Auth's DynamicBaseURLConfig
 // requires a mutable `allowedHosts: string[]`.
-const previewAllowedHosts: string[] = [...PREVIEW_ALLOWED_HOSTS];
+const previewAllowedHosts: string[] = [
+  ...PREVIEW_ALLOWED_HOSTS,
+  // v0 preview deployments use a stable *.v0.build origin rather than the
+  // sandbox hostname. Keep this scoped to the preview domain, not all hosts.
+  "*.v0.build",
+];
 // Local `npm run dev` (port 8080 contract). Browsers may send Origin as any of
 // these for the same server — trusting only `localhost` rejects `127.0.0.1` and
 // breaks email/password with "Invalid origin".
