@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { requireUserId } from "@/lib/auth/verify.server";
 import { loadTicket } from "@/lib/playback.server";
 
 function isVideoResponse(status: number, type: string) {
@@ -31,7 +32,13 @@ export const Route = createFileRoute("/api/stream/$ticket")({
   server: {
     handlers: {
       GET: async ({ request, params }) => {
-        const ticket = await loadTicket(params.ticket);
+        let userId: string;
+        try {
+          userId = await requireUserId();
+        } catch {
+          return new Response("Unauthorized", { status: 401 });
+        }
+        const ticket = await loadTicket(params.ticket, userId);
         if (!ticket) return new Response("Playback expired", { status: 410 });
         const download = new URL(request.url).searchParams.get("download") === "1";
         const range = request.headers.get("range") || "";
@@ -39,7 +46,7 @@ export const Route = createFileRoute("/api/stream/$ticket")({
         try {
           upstream = await fetch(ticket.url, {
             headers: upstreamHeaders(ticket.headers, range),
-            redirect: "follow",
+            redirect: "manual",
           });
         } catch {
           return new Response("CINEVO could not reach that media server.", { status: 502 });
@@ -54,20 +61,26 @@ export const Route = createFileRoute("/api/stream/$ticket")({
         });
       },
       HEAD: async ({ request, params }) => {
-        const ticket = await loadTicket(params.ticket);
+        let userId: string;
+        try {
+          userId = await requireUserId();
+        } catch {
+          return new Response(null, { status: 401 });
+        }
+        const ticket = await loadTicket(params.ticket, userId);
         if (!ticket) return new Response(null, { status: 410 });
         const range = request.headers.get("range") || "";
         try {
           let upstream = await fetch(ticket.url, {
             method: "HEAD",
             headers: upstreamHeaders(ticket.headers, range),
-            redirect: "follow",
+            redirect: "manual",
           });
           if (upstream.status === 405 || upstream.status === 501) {
             upstream = await fetch(ticket.url, {
               method: "GET",
               headers: upstreamHeaders(ticket.headers, range || "bytes=0-1"),
-              redirect: "follow",
+              redirect: "manual",
             });
             await upstream.body?.cancel();
           }
