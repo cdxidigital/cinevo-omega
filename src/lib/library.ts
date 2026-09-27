@@ -234,6 +234,8 @@ export const THEMES = [
   { id: "violet", label: "Violet", feel: "Lilac night", accent: "#ddcfff" },
   { id: "ember", label: "Ember", feel: "Warm lamplight", accent: "#ffd0b8" },
   { id: "sage", label: "Sage", feel: "Quiet green", accent: "#b6f6d8" },
+  { id: "electric", label: "Electric", feel: "Violet neon", accent: "#ff4fd8" },
+  { id: "aurora", label: "Aurora", feel: "Polar glow", accent: "#8affd1" },
   { id: "day", label: "Day", feel: "Paper and ink", accent: "#0c5f72" },
 ] as const;
 
