@@ -2308,8 +2308,8 @@ html[data-theme="paper"] .house-ambient {
 }
 .public-hero__veil {
   background:
-    linear-gradient(90deg, #050505 0%, rgb(5 5 5 / 82%) 32%, rgb(5 5 5 / 22%) 74%),
-    linear-gradient(180deg, rgb(5 5 5 / 66%) 0%, transparent 24%, #050505 100%);
+    linear-gradient(90deg, #000000 0%, rgb(0 0 0 / 90%) 32%, rgb(0 0 0 / 45%) 74%),
+    linear-gradient(180deg, rgb(0 0 0 / 75%) 0%, transparent 20%, #000000 100%);
 }
 .public-hero__content {
   max-width: 690px;
@@ -3528,6 +3528,18 @@ html[data-theme="nova"] .public-home,
   box-shadow: 0 8px 32px rgb(0 0 0 / 28%);
   margin-top: auto;
   margin-bottom: auto;
+}
+
+.login-card .brand > span > b {
+  font-size: 48px;
+}
+
+.login-card .brand svg polygon:nth-of-type(3) {
+  border-radius: 24px;
+}
+
+.public-hero__logo svg {
+  border-radius: 24px;
 }
 
 .gate-stage {
