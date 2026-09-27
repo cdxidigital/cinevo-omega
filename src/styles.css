@@ -2639,8 +2639,8 @@ html[data-theme="nova"] .public-home,
   --cine-neon-cyan: #37e7ff;
   --cine-neon-pink: #ff4fa3;
   --cine-neon-violet: #8d6bff;
-  background: #090a10;
-  color: var(--cine-paper);
+  background: #090a10 !important;
+  color: var(--cine-paper) !important;
 }
 .public-home .public-nav {
   border-bottom-color: rgb(255 255 255 / 8%);
