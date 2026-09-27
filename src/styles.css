@@ -2772,6 +2772,55 @@ html[data-theme="paper"] .house-ambient {
 }
 .public-hero p { max-width: 34rem; margin: 0; color: rgb(255 255 255 / 78%); font-size: clamp(15px, 1.4vw, 17px); line-height: 1.55; }
 .public-hero__actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 22px; }
+
+/* Landing refinement: compact chrome, clearer reading order, and a lighter media-first finish. */
+.public-home {
+  --cine-ink: #101417;
+  --cine-paper: #f7f7f3;
+  --cine-gold: #ffb454;
+  --cine-gold-soft: #ffd28f;
+  background: #101417;
+}
+.public-nav {
+  min-height: 64px;
+  padding-inline: clamp(18px, 4vw, 56px);
+  border-bottom-color: rgb(255 255 255 / 12%);
+  background: linear-gradient(180deg, rgb(16 20 23 / 96%), rgb(16 20 23 / 68%) 78%, transparent);
+}
+.public-nav__brand {
+  padding: 5px 11px 5px 5px;
+  border-color: rgb(255 255 255 / 22%);
+  background: rgb(255 255 255 / 8%);
+  box-shadow: 0 6px 22px rgb(0 0 0 / 14%);
+}
+.public-nav__brand .brand { gap: 6px; }
+.public-nav__brand .brand__gem { width: 24px; height: 24px; filter: drop-shadow(0 0 8px rgb(255 180 84 / 52%)); }
+.public-nav__brand .brand b { color: var(--cine-paper); font-size: 0.8rem; letter-spacing: 0.12em; }
+.public-nav nav { gap: clamp(14px, 2vw, 25px); }
+.public-nav nav a { color: rgb(247 247 243 / 72%); font-size: 12px; }
+.public-hero {
+  min-height: min(82svh, 720px);
+  padding: clamp(92px, 14vh, 138px) clamp(20px, 7vw, 104px) 72px;
+}
+.public-hero__still { opacity: 0.72; filter: saturate(0.72) contrast(1.04) brightness(0.64); }
+.public-hero__veil {
+  background: linear-gradient(90deg, #101417 0%, rgb(16 20 23 / 76%) 34%, rgb(16 20 23 / 10%) 80%), linear-gradient(180deg, rgb(16 20 23 / 56%), transparent 28%, #101417 100%);
+}
+.public-hero__logo.brand[data-layout="stacked"][data-size="xl"] .brand__gem { width: 52px; height: 52px; }
+.public-hero__logo.brand[data-size="xl"] b { font-size: 1.42rem; letter-spacing: 0.04em; }
+.public-hero__logo { margin-bottom: 20px; }
+.public-hero h1 { font-size: clamp(3.1rem, 6.4vw, 6.4rem); line-height: 0.98; letter-spacing: -0.06em; }
+.public-hero p { color: rgb(247 247 243 / 72%); }
+.public-primary, .public-secondary { min-height: 42px; padding-inline: 16px; font-size: 14px; border-radius: 8px; }
+.public-hero__note { margin-top: 22px; color: rgb(247 247 243 / 68%); }
+.public-hero__note small { color: rgb(247 247 243 / 54%); }
+@media (max-width: 700px) {
+  .public-nav { min-height: 58px; }
+  .public-nav nav { display: none; }
+  .public-hero { min-height: 720px; padding-top: 104px; }
+  .public-hero__logo.brand[data-layout="stacked"][data-size="xl"] .brand__gem { width: 44px; height: 44px; }
+  .public-hero h1 { font-size: clamp(3rem, 15vw, 4.8rem); }
+}
 .public-primary, .public-secondary {
   display: inline-flex; gap: 8px; align-items: center; justify-content: center;
   min-height: 46px; padding: 0 18px; border-radius: 6px;
@@ -2833,6 +2882,27 @@ html[data-theme="paper"] .house-ambient {
 }
 .public-strip:hover .public-strip__track {
   animation-play-state: paused;
+}
+
+/* Final landing pass: keep the header compact at every breakpoint. */
+.public-home .public-nav {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 24px;
+}
+.public-home .public-nav nav { justify-self: center; }
+.public-home .public-nav__actions { justify-self: end; }
+@media (max-width: 700px) {
+  .public-home .public-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .public-home .public-nav nav { display: none; }
+  .public-home .public-nav__actions { margin-left: auto; }
+  .public-home .public-nav__actions .public-secondary { display: none; }
+  .public-home .public-nav__actions .public-primary { min-height: 38px; padding-inline: 12px; font-size: 12px; }
 }
 .public-chapter {
   position: relative;
