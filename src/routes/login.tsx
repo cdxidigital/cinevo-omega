@@ -65,37 +65,57 @@ function Login() {
     void nav({ to: "/app", search: { ...(room ? { room } : {}), ...(core ? { core } : {}) } });
   };
 
-  const keepSession = {
-    onSuccess(context: { response: Response }) {
-      rememberSessionToken(sessionTokenFromAuthResponse(context.response.headers.get("set-auth-token")));
-    },
-  };
-
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    const cleanEmail = email.trim();
+    if (password.length < 8) {
+      setError("Use a password of at least 8 characters.");
+      return;
+    }
     setPending(true);
+    let captured: string | null = null;
+    const fetchOptions = {
+      onSuccess(context: { response: Response }) {
+        captured = sessionTokenFromAuthResponse(context.response.headers.get("set-auth-token"));
+      },
+    };
     try {
       if (mode === "up") {
-        const { error: err } = await authClient.signUp.email({
-          email: email.trim(),
+        const { data, error: err } = await authClient.signUp.email({
+          email: cleanEmail,
           password,
-          name: username.trim() || email.split("@")[0],
-          fetchOptions: keepSession,
+          name: username.trim() || cleanEmail.split("@")[0] || "Member",
+          fetchOptions,
         });
         if (err) {
-          setError(err.message || "Could not create that account.");
+          const text = (err.message || "").toLowerCase();
+          setError(text.includes("exist") ? "That email already has a house. Sign in instead." : err.message || "Could not create that account.");
+          if (text.includes("exist")) setMode("in");
+          return;
+        }
+        rememberSessionToken(captured || (data && "token" in data ? String(data.token ?? "") : null) || null);
+        const session = await authClient.getSession();
+        if (!session.data?.user) {
+          setError("The account was created, but this browser did not keep the sign-in. Try signing in.");
+          setMode("in");
           return;
         }
         await afterEmail(username);
       } else {
-        const { error: err } = await authClient.signIn.email({
-          email: email.trim(),
+        const { data, error: err } = await authClient.signIn.email({
+          email: cleanEmail,
           password,
-          fetchOptions: keepSession,
+          fetchOptions,
         });
         if (err) {
           setError(err.message || "Email or password did not match.");
+          return;
+        }
+        rememberSessionToken(captured || (data && "token" in data ? String(data.token ?? "") : null) || null);
+        const session = await authClient.getSession();
+        if (!session.data?.user) {
+          setError("The password matched, but this browser did not keep the sign-in. Reload and try again.");
           return;
         }
         void nav({ to: "/app", search: { ...(room ? { room } : {}), ...(core ? { core } : {}) } });
