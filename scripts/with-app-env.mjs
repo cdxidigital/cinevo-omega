@@ -111,7 +111,16 @@ function main(argv) {
     process.exit(2);
   }
   const env = mergeAppEnv(readAppEnv(projectRoot()), process.env);
-  const child = spawn(command, args, { stdio: "inherit", env });
+  // Windows resolves a bare `vite` / `npm` only through its `.cmd` shim, which
+  // `spawn` cannot execute directly — without a shell it fails with ENOENT.
+  // The shell does not quote for us, so quote anything that needs it ourselves.
+  const shell = process.platform === "win32";
+  const quote = (arg) => (/[\s"&|<>^%]/.test(arg) ? `"${arg.replace(/"/g, '\\"')}"` : arg);
+  const child = spawn(command, shell ? args.map(quote) : args, {
+    stdio: "inherit",
+    env,
+    shell,
+  });
   // The dev server is long-running and is stopped by signalling this wrapper.
   for (const signal of ["SIGINT", "SIGTERM", "SIGHUP"]) {
     process.on(signal, () => child.kill(signal));

@@ -3575,3 +3575,269 @@ html[data-theme="paper"] {
 .cinevo-night .house-hero__art,
 .cinevo-night .house-detail__art { filter:saturate(.62) brightness(.5) contrast(1.07); }
 .cinevo-zen .poster-meta { display:none; }
+
+/* ---------------------------------------------------------------------------
+   Restored rules
+
+   These selectors are used in components but lost when the CINEVO stylesheet
+   was replaced by the Omega design system (89afa72), which left the mobile
+   drawer, the library platform arc, the room stage and the hero decor
+   unstyled. Values are the originals, mapped onto the Omega `--o-*` tokens.
+   -------------------------------------------------------------------------- */
+
+/* Mobile navigation drawer */
+.drawer-scrim {
+  position: fixed;
+  z-index: 40;
+  inset: 0;
+  background: rgb(0 0 0 / 62%);
+}
+
+.drawer-panel {
+  height: 100%;
+  width: min(18rem, 86vw);
+  background: color-mix(in srgb, var(--o-panel-strong) 94%, transparent);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border-right: 1px solid var(--o-border);
+  color: var(--o-text);
+  padding: 1.1rem;
+}
+
+/* Room stage */
+.house-stage {
+  position: relative;
+  z-index: 12;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  width: 100%;
+  min-height: clamp(13.5rem, 38dvh, 22rem);
+  margin: 0;
+  padding: 0.35rem max(4vw, 1.15rem) 0.65rem;
+  overflow: hidden;
+}
+
+.house-stage .house-chip {
+  min-height: 2.25rem;
+}
+
+.house-stage .house-sources {
+  flex-wrap: nowrap;
+}
+
+.house-page--flow {
+  overflow: auto;
+  padding-bottom: 2rem;
+}
+
+/* Library platform arc */
+.platform-arc {
+  margin-top: 3.5rem;
+  padding-top: 2.25rem;
+  border-top: 1px solid rgb(255 255 255 / 10%);
+}
+
+.house-library .platform-arc {
+  margin-top: 1.15rem;
+  padding-top: 1rem;
+}
+
+.platform-arc header {
+  max-width: 36rem;
+}
+
+.platform-arc h2 {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-ui);
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-transform: none;
+}
+
+.platform-arc header > p {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--o-muted);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.platform-arc__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr));
+  gap: 0.65rem;
+  margin-top: 1.25rem;
+}
+
+.arc-card {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1rem 1rem 0.9rem;
+  border: 1px solid var(--o-border);
+  border-radius: var(--o-radius-xs);
+  background: var(--o-panel);
+  color: var(--o-text);
+  text-align: left;
+  transition: border-color 180ms var(--o-ease), background 180ms var(--o-ease);
+}
+
+.arc-card:hover {
+  border-color: var(--o-border-strong);
+  background: var(--o-panel-strong);
+}
+
+.arc-card:active {
+  transform: scale(0.96);
+}
+
+.arc-card b {
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.arc-card span {
+  margin-top: 0.45rem;
+  color: var(--o-muted);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.arc-card i {
+  margin-top: auto;
+  padding-top: 0.85rem;
+  color: var(--o-text);
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* Hero decor */
+.public-hero__beam,
+.public-hero__orbit,
+.public-hero__scanline {
+  pointer-events: none;
+  position: absolute;
+}
+
+.public-hero__beam {
+  inset: -30%;
+  z-index: -1;
+  background: conic-gradient(from 215deg at 70% 52%, transparent 0 24%, rgb(116 236 255 / 12%) 28%, transparent 37% 100%);
+  mix-blend-mode: screen;
+  animation: beam-sweep 18s linear infinite;
+}
+
+.public-hero__orbit {
+  z-index: -1;
+  width: min(58vw, 720px);
+  aspect-ratio: 1;
+  border: 1px solid rgb(116 236 255 / 18%);
+  border-radius: 50%;
+  right: -14vw;
+  top: 12%;
+  transform: rotate(-24deg) skewX(-20deg);
+  box-shadow: 0 0 80px rgb(116 236 255 / 10%), inset 0 0 80px rgb(255 198 109 / 6%);
+  animation: orbit-drift 16s ease-in-out infinite alternate;
+}
+
+.public-hero__orbit--two {
+  width: min(46vw, 560px);
+  right: 9vw;
+  top: 26%;
+  transform: rotate(28deg) skewX(18deg);
+  border-color: rgb(255 198 109 / 24%);
+  animation-delay: -5s;
+}
+
+.public-hero__scanline {
+  z-index: 2;
+  inset: 0;
+  opacity: 0.16;
+  background: repeating-linear-gradient(180deg, transparent 0 4px, rgb(255 255 255 / 8%) 5px, transparent 6px);
+  mix-blend-mode: overlay;
+}
+
+@keyframes beam-sweep {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbit-drift {
+  to { transform: rotate(-12deg) skewX(-20deg) translate3d(-2%, 3%, 0); }
+}
+
+/* Public prose + kicker gem */
+.public-prose { display: grid; gap: 1.5rem; }
+.public-prose h2 { margin: 0; font-family: var(--font-ui); font-size: 1.15rem; font-weight: 600; letter-spacing: -0.02em; }
+.public-prose p { margin: 0.4rem 0 0; color: var(--o-muted); line-height: 1.55; }
+.public-prose a { color: var(--o-cyan); }
+
+.public-kicker__gem {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+/* Remote */
+.remote-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.remote-card__actions .house-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+}
+
+.remote-card__note {
+  margin: 0;
+  color: var(--o-muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.remote-app__kicker {
+  margin: 0.4rem 0 0;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--o-cyan);
+}
+
+@media (max-width: 700px) {
+  .house-stage {
+    min-height: 42dvh;
+    padding-right: 1.2rem;
+    padding-left: 1.2rem;
+  }
+
+  .platform-arc {
+    margin-top: 2.5rem;
+    padding-top: 1.75rem;
+  }
+
+  .platform-arc h2 {
+    font-size: 1.35rem;
+  }
+
+  .arc-card {
+    padding: 0.95rem;
+  }
+
+  .public-hero__orbit { width: 110vw; right: -54vw; top: 20%; }
+  .public-hero__orbit--two { right: -25vw; top: 30%; }
+}
