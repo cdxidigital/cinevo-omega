@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { UnauthorizedError, requireUserId } from "@/lib/auth/verify.server";
+import { UnauthorizedError, isAuthNotConfiguredError, requireUserId } from "@/lib/auth/verify.server";
+import { AUTH_NOT_CONFIGURED_MESSAGE } from "@/lib/auth/unavailable";
 import { normalizeCode, sanitizeCommand, sanitizeNow } from "@/lib/remote-protocol";
 import { closeRemote, openRemote, pushRemoteCommand, readRemote, syncRemote } from "@/lib/remote.server";
 import { allowRequest } from "@/lib/rate-limit.server";
@@ -28,7 +29,8 @@ export const Route = createFileRoute("/api/remote")({
         let id: string;
         try {
           id = await userId(request);
-        } catch {
+        } catch (error) {
+          if (isAuthNotConfiguredError(error)) return json({ ok: false, error: AUTH_NOT_CONFIGURED_MESSAGE }, 503);
           return json({ ok: false, error: "Sign in to use the remote." }, 401);
         }
         const row = await readRemote(id, code);
@@ -72,6 +74,7 @@ export const Route = createFileRoute("/api/remote")({
           }
           return json({ ok: false, error: "Unknown remote action." }, 400);
         } catch (error) {
+          if (isAuthNotConfiguredError(error)) return json({ ok: false, error: AUTH_NOT_CONFIGURED_MESSAGE }, 503);
           if (error instanceof UnauthorizedError) return json({ ok: false, error: "Sign in on the house first." }, 401);
           return json({ ok: false, error: "The remote could not reach the house." }, 500);
         }
