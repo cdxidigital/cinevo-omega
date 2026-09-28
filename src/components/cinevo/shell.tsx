@@ -200,19 +200,6 @@ export function Shell({
         <Link to="/" aria-label="CINEVO home" className="top-nav__brand">
           <Logo size="sm" tagline={false} />
         </Link>
-        <nav className="top-nav__links max-md:hidden" aria-label="Main">
-          {NAV.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => go(item.id)}
-              className={cn(room === item.id && "is-on")}
-              aria-current={room === item.id ? "page" : undefined}
-            >
-              {item.label}
-            </button>
-          ))}
-        </nav>
         <div className="top-nav__tools">
           <button
             type="button"
