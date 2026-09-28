@@ -2,7 +2,15 @@ import { getSql } from "@/lib/db";
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
 import { jellyfinStreamTarget, nodeStreamTarget, plexStreamTarget, serverAddressError, type PlaybackFit } from "@/lib/playback-urls";
 
-const ticketKey = createHash("sha256").update(process.env.BETTER_AUTH_SECRET || "cinevo-preview-ticket-key").digest();
+// Playback tickets hold Plex/Jellyfin credentials encrypted at rest. In
+// production BETTER_AUTH_SECRET is required (auth fails closed without it), so
+// the key is a real secret. Without it — local preview only — a per-process
+// random key is used rather than a constant compiled into the public repo:
+// tickets live at most 2h and a restart invalidates them anyway, which is the
+// trade for a leaked preview database not being decryptable with a known key.
+const ticketKey = createHash("sha256")
+  .update(process.env.BETTER_AUTH_SECRET || randomBytes(32))
+  .digest();
 function encryptTicket(value: string) {
   const iv = randomBytes(12);
   const cipher = createCipheriv("aes-256-gcm", ticketKey, iv);
