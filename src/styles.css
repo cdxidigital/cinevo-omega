@@ -72,6 +72,7 @@ body,
 html {
   font-size: clamp(15px, 14px + .15vw, 17px);
   color-scheme: dark;
+  background: var(--o-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -189,6 +190,7 @@ html[data-theme="day"],
 html[data-theme="iris"],
 html[data-theme="paper"] {
   color-scheme: light;
+  background: var(--o-bg);
   --o-bg: #f4f2ee;
   --o-bg-deep: #ebe7e0;
   --o-panel: rgba(255,255,255,.82);
