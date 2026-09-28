@@ -72,6 +72,7 @@ body,
 html {
   font-size: clamp(15px, 14px + .15vw, 17px);
   color-scheme: dark;
+  background: var(--o-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -157,38 +158,39 @@ html[data-theme="noir"] {
   --o-cyan: #fff;
 }
 
-html[data-theme="pulse"],
-html[data-theme="nova"] {
+html[data-theme="pulse"] {
   --o-cyan: #7eefff;
   --o-violet: #b5a6ff;
+  --o-bg: #060b12;
+  --o-panel: rgba(11,22,33,.82);
+  --o-panel-strong: rgba(15,29,43,.96);
 }
 
-html[data-theme="violet"] {
-  --o-bg: #0e0a15;
-  --o-panel: rgba(23,17,31,.8);
-  --o-panel-strong: rgba(29,20,40,.96);
-  --o-cyan: #ddceff;
-  --o-violet: #a48cff;
+html[data-theme="electric"] {
+  --o-bg: #100714;
+  --o-bg-deep: #07030b;
+  --o-panel: rgba(29,12,38,.82);
+  --o-panel-strong: rgba(41,16,53,.96);
+  --o-cyan: #ffb5ef;
+  --o-violet: #c39aff;
+  --o-magenta: #ff4fd8;
 }
 
-html[data-theme="ember"] {
-  --o-bg: #120b09;
-  --o-panel: rgba(31,19,16,.82);
-  --o-panel-strong: rgba(38,24,20,.96);
-  --o-cyan: #ffd0b4;
-}
-
-html[data-theme="sage"] {
-  --o-bg: #09110e;
-  --o-panel: rgba(16,27,23,.82);
-  --o-panel-strong: rgba(21,34,29,.96);
-  --o-cyan: #b2f7d6;
+html[data-theme="aurora"] {
+  --o-bg: #06120f;
+  --o-bg-deep: #020907;
+  --o-panel: rgba(10,31,27,.82);
+  --o-panel-strong: rgba(15,43,36,.96);
+  --o-cyan: #8affd1;
+  --o-violet: #8eb8ff;
+  --o-lime: #b5ffd7;
 }
 
 html[data-theme="day"],
 html[data-theme="iris"],
 html[data-theme="paper"] {
   color-scheme: light;
+  background: var(--o-bg);
   --o-bg: #f4f2ee;
   --o-bg-deep: #ebe7e0;
   --o-panel: rgba(255,255,255,.82);
@@ -475,10 +477,10 @@ html[data-theme="paper"] {
   left: calc(var(--o-rail) + 18px);
   right: 18px;
   z-index: 45;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
   align-items: center;
-  gap: 18px;
+  justify-content: flex-end;
+  gap: 10px;
   min-height: 60px;
   padding: 7px 8px 7px 14px;
   border: 1px solid var(--o-border);
@@ -2672,14 +2674,10 @@ html[data-theme="paper"] {
 }
 
 .swatch[data-swatch="noir"] { background:#fff; }
-.swatch[data-swatch="pulse"],
-.swatch[data-swatch="nova"] { background:#7eefff; }
-.swatch[data-swatch="violet"] { background:#a48cff; }
-.swatch[data-swatch="ember"] { background:#ffd0b4; }
-.swatch[data-swatch="sage"] { background:#b2f7d6; }
-.swatch[data-swatch="day"],
-.swatch[data-swatch="iris"],
-.swatch[data-swatch="paper"] { background:#075f75; }
+.swatch[data-swatch="pulse"] { background:#7eefff; }
+.swatch[data-swatch="electric"] { background:#ff4fd8; }
+.swatch[data-swatch="aurora"] { background:#8affd1; }
+.swatch[data-swatch="day"] { background:#075f75; }
 
 /* Remote/Node public pages */
 .remote-card {
@@ -3390,6 +3388,171 @@ html[data-theme="paper"] {
     animation-duration: 1ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
+  }
+}
+
+/* Cinematic deployment polish */
+.public-home {
+  --landing-cyan: #8beaf4;
+  --landing-ink: #050609;
+  background:
+    radial-gradient(ellipse at 78% 8%, rgba(139, 234, 244, .08), transparent 30rem),
+    var(--landing-ink);
+}
+
+.public-nav {
+  min-height: 72px;
+  border-bottom-color: rgba(255, 255, 255, .075);
+  background: linear-gradient(180deg, rgba(5, 6, 9, .9), rgba(5, 6, 9, .58));
+}
+
+.public-nav__brand {
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+.public-nav__brand:hover {
+  opacity: .86;
+  transform: translateY(-1px);
+}
+
+.public-hero {
+  min-height: max(780px, 100svh);
+  padding-top: 150px;
+  padding-bottom: 110px;
+}
+
+.public-hero::after {
+  content: "01  /  04";
+  position: absolute;
+  right: clamp(22px, 7vw, 100px);
+  bottom: 42px;
+  color: rgba(255, 255, 255, .36);
+  font-family: var(--font-mono);
+  font-size: .6rem;
+  letter-spacing: .16em;
+}
+
+.public-hero__still {
+  object-position: 62% center;
+  filter: saturate(.55) contrast(1.18) brightness(.58);
+  transform: scale(1.04);
+}
+
+.public-hero__veil {
+  background:
+    linear-gradient(90deg, rgba(5, 6, 9, .98) 0%, rgba(5, 6, 9, .84) 33%, rgba(5, 6, 9, .3) 75%, rgba(5, 6, 9, .58) 100%),
+    linear-gradient(180deg, rgba(5, 6, 9, .08) 34%, rgba(5, 6, 9, .94) 96%, var(--landing-ink) 100%);
+}
+
+.public-hero__content {
+  max-width: 700px;
+}
+
+.public-hero__logo {
+  opacity: .92;
+  transform: scale(.92);
+  transform-origin: left center;
+}
+
+.public-hero h1 {
+  margin-top: 30px;
+  max-width: 680px;
+  font-size: clamp(3.4rem, 7.6vw, 7rem);
+  line-height: .86;
+  text-wrap: balance;
+}
+
+.public-hero h1 em {
+  color: var(--landing-cyan);
+  text-shadow: 0 0 42px rgba(139, 234, 244, .2);
+}
+
+.public-hero p {
+  margin-top: 26px;
+  max-width: 510px;
+  color: rgba(232, 238, 246, .78);
+}
+
+.public-hero__actions {
+  margin-top: 30px;
+}
+
+.public-primary,
+.public-secondary {
+  min-height: 48px;
+  border-radius: 10px;
+}
+
+.public-primary {
+  padding-inline: 20px;
+  box-shadow: 0 12px 36px rgba(139, 234, 244, .18);
+}
+
+.public-hero__note {
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top-color: rgba(255, 255, 255, .12);
+}
+
+.home-reel,
+.home-highlights,
+.home-downloads {
+  padding-block: 128px;
+}
+
+.home-library-steps article,
+.home-highlight {
+  background: linear-gradient(145deg, rgba(255, 255, 255, .045), rgba(255, 255, 255, .018));
+}
+
+.home-library-steps article:hover,
+.home-highlight:hover {
+  background: linear-gradient(145deg, rgba(139, 234, 244, .09), rgba(255, 255, 255, .025));
+}
+
+.public-chapter {
+  min-height: 96svh;
+}
+
+.public-chapter__still {
+  filter: saturate(.5) brightness(.56) contrast(1.08);
+}
+
+.home-closing {
+  min-height: 68svh;
+  border-top: 1px solid rgba(255, 255, 255, .06);
+}
+
+.public-footer {
+  padding-top: 44px;
+  padding-bottom: 52px;
+}
+
+@media (max-width: 700px) {
+  .public-hero {
+    min-height: 760px;
+    padding-top: 126px;
+    padding-bottom: 76px;
+  }
+
+  .public-hero::after {
+    right: 20px;
+    bottom: 26px;
+  }
+
+  .public-hero__logo {
+    transform: scale(.82);
+  }
+
+  .public-hero h1 {
+    margin-top: 20px;
+    font-size: clamp(3.1rem, 15vw, 5rem);
+  }
+
+  .home-reel,
+  .home-highlights,
+  .home-downloads {
+    padding-block: 88px;
   }
 }
 

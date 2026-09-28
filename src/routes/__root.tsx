@@ -54,7 +54,7 @@ export const Route = createRootRoute({
       <head>
         <HeadContent />
       </head>
-      <body className="bg-cine-bg text-cine-text antialiased">
+      <body>
         <Rehydrate />
         <Pwa />
         <PreviewHostBridge />

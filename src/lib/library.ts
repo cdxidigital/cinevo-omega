@@ -231,9 +231,6 @@ export function sourceForTitle(title: { source?: string; sourceLabel?: string },
 export const THEMES = [
   { id: "noir", label: "Noir", feel: "Black and white", accent: "#ffffff" },
   { id: "pulse", label: "Pulse", feel: "Cyan on black", accent: "#7ee7ff" },
-  { id: "violet", label: "Violet", feel: "Lilac night", accent: "#ddcfff" },
-  { id: "ember", label: "Ember", feel: "Warm lamplight", accent: "#ffd0b8" },
-  { id: "sage", label: "Sage", feel: "Quiet green", accent: "#b6f6d8" },
   { id: "electric", label: "Electric", feel: "Violet neon", accent: "#ff4fd8" },
   { id: "aurora", label: "Aurora", feel: "Polar glow", accent: "#8affd1" },
   { id: "day", label: "Day", feel: "Paper and ink", accent: "#0c5f72" },
@@ -242,8 +239,9 @@ export const THEMES = [
 export type ThemeId = (typeof THEMES)[number]["id"];
 
 export function migrateTheme(id?: string): ThemeId {
-  if (id === "iris" || id === "paper") return "day";
-  if (id === "nova") return "pulse";
+  if (id === "iris" || id === "paper" || id === "violet") return "day";
+  if (id === "nova" || id === "sage") return "pulse";
+  if (id === "ember") return "electric";
   if (THEMES.some((t) => t.id === id)) return id as ThemeId;
   return "noir";
 }

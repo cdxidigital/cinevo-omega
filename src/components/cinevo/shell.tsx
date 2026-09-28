@@ -197,22 +197,6 @@ export function Shell({
         </div>
       </aside>
       <header className={cn("top-nav", navHidden && "is-hidden")}>
-        <Link to="/" aria-label="CINEVO home" className="top-nav__brand">
-          <Logo size="sm" tagline={false} />
-        </Link>
-        <nav className="top-nav__links max-md:hidden" aria-label="Main">
-          {NAV.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => go(item.id)}
-              className={cn(room === item.id && "is-on")}
-              aria-current={room === item.id ? "page" : undefined}
-            >
-              {item.label}
-            </button>
-          ))}
-        </nav>
         <div className="top-nav__tools">
           <button
             type="button"
@@ -226,14 +210,6 @@ export function Shell({
           <button type="button" className="house-search" onClick={() => setSearchOpen(true)}>
             <Search size={16} />
             <span>Search this library</span>
-          </button>
-          {party ? (
-            <button type="button" className="party-chip" onClick={endParty} title="Ends the note on this screen. Playback is not synced to another device.">
-              With {party.with || "someone"} · End
-            </button>
-          ) : null}
-          <button type="button" className="top-nav__core max-md:hidden" onClick={() => setCoreOpen(true)}>
-            Core
           </button>
           <button type="button" aria-label="Search" className="top-nav__icon md:hidden" onClick={() => setSearchOpen(true)}>
             <Search size={18} />
