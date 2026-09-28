@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { safeArtPath } from "@/lib/artwork-model";
-import { requireUserId } from "@/lib/auth/verify.server";
+import { isAuthNotConfiguredError, requireUserId } from "@/lib/auth/verify.server";
+import { authNotConfiguredResponse } from "@/lib/auth/unavailable";
 import { loadTicket } from "@/lib/playback.server";
 
 export const Route = createFileRoute("/api/art/$ticket")({
@@ -10,7 +11,8 @@ export const Route = createFileRoute("/api/art/$ticket")({
         let userId: string;
         try {
           userId = await requireUserId();
-        } catch {
+        } catch (error) {
+          if (isAuthNotConfiguredError(error)) return authNotConfiguredResponse();
           return new Response("Unauthorized", { status: 401 });
         }
         const path = safeArtPath(new URL(request.url).searchParams.get("path") || "");

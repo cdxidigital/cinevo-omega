@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Navigate, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Navigate, useNavigate, useRouteContext } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { authClient, authEnabled, rememberSessionToken, sessionTokenFromAuthResponse } from "@/lib/auth/client";
 import { Logo } from "@/components/cinevo/logo";
@@ -24,6 +24,13 @@ function Login() {
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  // Set by the root loader when the server has sign-in disabled for missing
+  // production config (see `@/lib/auth/unavailable`).
+  const authUnavailableMessage = useRouteContext({
+    from: "__root__",
+    select: (ctx) =>
+      ctx.sessionUser && "authNotConfigured" in ctx.sessionUser ? ctx.sessionUser.error : null,
+  });
 
   useEffect(() => {
     setMode(initial);
@@ -116,9 +123,15 @@ function Login() {
 
         {authEnabled ? (
           <>
-            <div className="mt-8 rounded-xl border border-cine-border bg-cine-elevated p-4 text-sm text-cine-muted">
-              Sign in securely with your Cinevo account. Your session stays on this app and is never sent to a third-party broker.
-            </div>
+            {authUnavailableMessage ? (
+              <div role="alert" className="mt-8 rounded-xl border border-cine-border bg-cine-elevated p-4 text-sm text-cine-danger">
+                {authUnavailableMessage} Please try again later.
+              </div>
+            ) : (
+              <div className="mt-8 rounded-xl border border-cine-border bg-cine-elevated p-4 text-sm text-cine-muted">
+                Sign in securely with your Cinevo account. Your session stays on this app and is never sent to a third-party broker.
+              </div>
+            )}
             <form onSubmit={(e) => void submit(e)} className="grid gap-3">
               {mode === "up" ? (
                 <input
@@ -158,7 +171,7 @@ function Login() {
               />
               {error ? <p className="text-sm text-cine-danger">{error}</p> : null}
               <p className="text-xs text-cine-faint">Password at least 8 characters.{mode === "up" ? " Username: 3–20 letters, numbers, or underscores." : ""}</p>
-              <button type="submit" disabled={pending} className="house-btn house-btn--play h-12 w-full">
+              <button type="submit" disabled={pending || Boolean(authUnavailableMessage)} className="house-btn house-btn--play h-12 w-full">
                 {pending ? "Working…" : mode === "up" ? "Create account" : "Sign in"}
               </button>
             </form>
