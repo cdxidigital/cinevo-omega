@@ -475,10 +475,10 @@ html[data-theme="paper"] {
   left: calc(var(--o-rail) + 18px);
   right: 18px;
   z-index: 45;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
   align-items: center;
-  gap: 18px;
+  justify-content: flex-end;
+  gap: 10px;
   min-height: 60px;
   padding: 7px 8px 7px 14px;
   border: 1px solid var(--o-border);
