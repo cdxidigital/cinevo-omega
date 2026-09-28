@@ -2,6 +2,7 @@ import { getSql } from "@/lib/db";
 import { factsFromJellyfin, factsFromPlex, type MediaFacts } from "@/lib/artwork-model";
 import { parsePlexMetadata } from "@/lib/plex";
 import { serverAddressError } from "@/lib/playback-urls";
+import { encryptTicket } from "@/lib/playback.server";
 
 function ticketId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID().replace(/-/g, "");
@@ -38,7 +39,7 @@ export async function createArtTicket(input: { userId: string; provider: "plex" 
   const sql = await getSql();
   await sql`
     insert into cinevo_play_tickets (id, user_id, provider, url, headers, expires_at)
-    values (${id}, ${input.userId}, ${`art-${input.provider}`}, ${uri}, ${JSON.stringify(headers)}, ${expires}::timestamptz)
+    values (${id}, ${input.userId}, ${`art-${input.provider}`}, ${uri}, ${encryptTicket(JSON.stringify(headers))}, ${expires}::timestamptz)
   `;
   return { ok: true as const, ticket: id };
 }

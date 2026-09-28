@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { byMood, type Mood, type Title } from "./catalog";
 import type { LibSource, LibraryTitle, ThemeId } from "./library";
-import { THEMES, makePoster } from "./library";
+import { THEMES, makePoster, migrateTheme } from "./library";
 import type { Collection, Marker, PlayLog, TitlePatch } from "./house-tools";
 import type { PlexServer } from "./plex";
 import {
@@ -646,7 +646,7 @@ export const useCinevo = create<CinevoState>()(
       skipHydration: true,
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<CinevoState>;
-        const theme = p.prefs?.theme && THEMES.some((t) => t.id === p.prefs?.theme) ? p.prefs.theme : "pulse";
+        const theme = migrateTheme(p.prefs?.theme);
         return {
           ...current,
           ...p,

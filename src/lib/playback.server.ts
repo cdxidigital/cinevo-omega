@@ -11,13 +11,13 @@ import { jellyfinStreamTarget, nodeStreamTarget, plexStreamTarget, serverAddress
 const ticketKey = createHash("sha256")
   .update(process.env.BETTER_AUTH_SECRET || randomBytes(32))
   .digest();
-function encryptTicket(value: string) {
+export function encryptTicket(value: string) {
   const iv = randomBytes(12);
   const cipher = createCipheriv("aes-256-gcm", ticketKey, iv);
   const encrypted = Buffer.concat([cipher.update(value, "utf8"), cipher.final()]);
   return `${iv.toString("base64url")}.${cipher.getAuthTag().toString("base64url")}.${encrypted.toString("base64url")}`;
 }
-function decryptTicket(value: string) {
+export function decryptTicket(value: string) {
   try {
     const [iv, tag, payload] = value.split(".").map((part) => Buffer.from(part, "base64url"));
     const decipher = createDecipheriv("aes-256-gcm", ticketKey, iv);
@@ -83,13 +83,27 @@ export async function loadTicket(id: string, userId: string) {
   if (!row) return null;
   let headers: Record<string, string> = {};
   try {
-    const rawHeaders = typeof row.headers === "string" ? decryptTicket(row.headers) : null;
-    headers = rawHeaders ? JSON.parse(rawHeaders) as Record<string, string> : {};
+    const decrypted = typeof row.headers === "string" ? decryptTicket(row.headers) : null;
+    const rawHeaders = decrypted || (typeof row.headers === "string" ? row.headers : null);
+    headers = rawHeaders ? (JSON.parse(rawHeaders) as Record<string, string>) : {};
   } catch {
     headers = {};
   }
   if (!Object.keys(headers).length) return null;
-  const allowedHeaders = new Set(["accept", "x-plex-token", "x-plex-product", "x-plex-client-identifier", "x-plex-platform", "x-emby-token", "authorization"]);
-  const safeHeaders = Object.fromEntries(Object.entries(headers).filter(([key, value]) => allowedHeaders.has(key.toLowerCase()) && typeof value === "string" && value.length <= 2048));
+  const allowedHeaders = new Set([
+    "accept",
+    "x-plex-token",
+    "x-plex-product",
+    "x-plex-client-identifier",
+    "x-plex-platform",
+    "x-emby-token",
+    "x-emby-authorization",
+    "authorization",
+  ]);
+  const safeHeaders = Object.fromEntries(
+    Object.entries(headers).filter(
+      ([key, value]) => allowedHeaders.has(key.toLowerCase()) && typeof value === "string" && value.length <= 2048,
+    ),
+  );
   return { url: row.url, headers: safeHeaders };
 }
