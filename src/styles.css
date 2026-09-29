@@ -3297,6 +3297,54 @@ html[data-theme="paper"] {
   }
 }
 
+/* High-contrast type on cinematic surfaces. */
+.public-home .public-nav nav a,
+.public-home .public-nav__signin {
+  color: #e4ebf5;
+}
+
+.public-home .public-nav nav a:hover,
+.public-home .public-nav__signin:hover {
+  color: #ffffff;
+}
+
+.public-home .public-hero__content {
+  text-shadow: 0 2px 24px rgba(0, 0, 0, .34);
+}
+
+.public-home .public-hero h1 {
+  color: #ffffff;
+  text-shadow: 0 3px 30px rgba(0, 0, 0, .42);
+}
+
+.public-home .public-hero h1 em {
+  color: #9af4ff;
+}
+
+.public-home .public-hero p,
+.public-home .public-hero__note,
+.public-home .public-hero__note small {
+  color: #edf3fb;
+}
+
+.public-home .home-reel,
+.public-home .home-highlights,
+.public-home .home-downloads,
+.public-home .home-manifesto,
+.public-home .home-closing {
+  color: #f5f8fc;
+}
+
+.public-home .home-reel p,
+.public-home .home-highlights p,
+.public-home .home-downloads p,
+.public-home .home-manifesto p,
+.public-home .home-closing p,
+.public-home .home-library-steps small,
+.public-home .home-highlight small {
+  color: #cbd5e3;
+}
+
 @media (max-width: 520px) {
   .top-nav__brand {
     min-width: 96px;
