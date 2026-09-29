@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { safeArtPath } from "@/lib/artwork-model";
-import { requireUserId } from "@/lib/auth/verify.server";
+import { isAuthNotConfiguredError, requireUserId } from "@/lib/auth/verify.server";
+import { authNotConfiguredResponse } from "@/lib/auth/unavailable";
 import { loadTicket } from "@/lib/playback.server";
+import { serverAddressError } from "@/lib/playback-urls";
 
 export const Route = createFileRoute("/api/art/$ticket")({
   server: {
@@ -10,13 +12,15 @@ export const Route = createFileRoute("/api/art/$ticket")({
         let userId: string;
         try {
           userId = await requireUserId();
-        } catch {
+        } catch (error) {
+          if (isAuthNotConfiguredError(error)) return authNotConfiguredResponse();
           return new Response("Unauthorized", { status: 401 });
         }
         const path = safeArtPath(new URL(request.url).searchParams.get("path") || "");
         if (!path || path.length > 512) return new Response("No artwork", { status: 404 });
         const ticket = await loadTicket(params.ticket, userId);
         if (!ticket) return new Response("Artwork expired", { status: 410 });
+        if (serverAddressError(ticket.url)) return new Response("Media server address is not allowed.", { status: 502 });
         const base = ticket.url.replace(/\/$/, "");
         let upstream: Response;
         try {

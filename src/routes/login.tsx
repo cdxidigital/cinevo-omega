@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Navigate, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Navigate, useNavigate, useRouteContext } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { authClient, authEnabled, rememberSessionToken, sessionTokenFromAuthResponse } from "@/lib/auth/client";
 import { Logo } from "@/components/cinevo/logo";
@@ -24,6 +24,13 @@ function Login() {
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  // Set by the root loader when the server has sign-in disabled for missing
+  // production config (see `@/lib/auth/unavailable`).
+  const authUnavailableMessage = useRouteContext({
+    from: "__root__",
+    select: (ctx) =>
+      ctx.sessionUser && "authNotConfigured" in ctx.sessionUser ? ctx.sessionUser.error : null,
+  });
 
   useEffect(() => {
     setMode(initial);
@@ -58,37 +65,57 @@ function Login() {
     void nav({ to: "/app", search: { ...(room ? { room } : {}), ...(core ? { core } : {}) } });
   };
 
-  const keepSession = {
-    onSuccess(context: { response: Response }) {
-      rememberSessionToken(sessionTokenFromAuthResponse(context.response.headers.get("set-auth-token")));
-    },
-  };
-
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    const cleanEmail = email.trim();
+    if (password.length < 8) {
+      setError("Use a password of at least 8 characters.");
+      return;
+    }
     setPending(true);
+    let captured: string | null = null;
+    const fetchOptions = {
+      onSuccess(context: { response: Response }) {
+        captured = sessionTokenFromAuthResponse(context.response.headers.get("set-auth-token"));
+      },
+    };
     try {
       if (mode === "up") {
-        const { error: err } = await authClient.signUp.email({
-          email: email.trim(),
+        const { data, error: err } = await authClient.signUp.email({
+          email: cleanEmail,
           password,
-          name: username.trim() || email.split("@")[0],
-          fetchOptions: keepSession,
+          name: username.trim() || cleanEmail.split("@")[0] || "Member",
+          fetchOptions,
         });
         if (err) {
-          setError(err.message || "Could not create that account.");
+          const text = (err.message || "").toLowerCase();
+          setError(text.includes("exist") ? "That email already has a house. Sign in instead." : err.message || "Could not create that account.");
+          if (text.includes("exist")) setMode("in");
+          return;
+        }
+        rememberSessionToken(captured || (data && "token" in data ? String(data.token ?? "") : null) || null);
+        const session = await authClient.getSession();
+        if (!session.data?.user) {
+          setError("The account was created, but this browser did not keep the sign-in. Try signing in.");
+          setMode("in");
           return;
         }
         await afterEmail(username);
       } else {
-        const { error: err } = await authClient.signIn.email({
-          email: email.trim(),
+        const { data, error: err } = await authClient.signIn.email({
+          email: cleanEmail,
           password,
-          fetchOptions: keepSession,
+          fetchOptions,
         });
         if (err) {
           setError(err.message || "Email or password did not match.");
+          return;
+        }
+        rememberSessionToken(captured || (data && "token" in data ? String(data.token ?? "") : null) || null);
+        const session = await authClient.getSession();
+        if (!session.data?.user) {
+          setError("The password matched, but this browser did not keep the sign-in. Reload and try again.");
           return;
         }
         void nav({ to: "/app", search: { ...(room ? { room } : {}), ...(core ? { core } : {}) } });
@@ -116,9 +143,15 @@ function Login() {
 
         {authEnabled ? (
           <>
-            <div className="mt-8 rounded-xl border border-cine-border bg-cine-elevated p-4 text-sm text-cine-muted">
-              Sign in securely with your Cinevo account. Your session stays on this app and is never sent to a third-party broker.
-            </div>
+            {authUnavailableMessage ? (
+              <div role="alert" className="mt-8 rounded-xl border border-cine-border bg-cine-elevated p-4 text-sm text-cine-danger">
+                {authUnavailableMessage} Please try again later.
+              </div>
+            ) : (
+              <div className="mt-8 rounded-xl border border-cine-border bg-cine-elevated p-4 text-sm text-cine-muted">
+                Sign in securely with your Cinevo account. Your session stays on this app and is never sent to a third-party broker.
+              </div>
+            )}
             <form onSubmit={(e) => void submit(e)} className="grid gap-3">
               {mode === "up" ? (
                 <input
@@ -158,7 +191,7 @@ function Login() {
               />
               {error ? <p className="text-sm text-cine-danger">{error}</p> : null}
               <p className="text-xs text-cine-faint">Password at least 8 characters.{mode === "up" ? " Username: 3–20 letters, numbers, or underscores." : ""}</p>
-              <button type="submit" disabled={pending} className="house-btn house-btn--play h-12 w-full">
+              <button type="submit" disabled={pending || Boolean(authUnavailableMessage)} className="house-btn house-btn--play h-12 w-full">
                 {pending ? "Working…" : mode === "up" ? "Create account" : "Sign in"}
               </button>
             </form>

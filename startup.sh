@@ -1,6 +1,7 @@
 #!/bin/sh
 set -eu
 cd /workspace
+export VITE_AUTH_ENABLED=true
 node scripts/preview.mjs stop || true
 if curl -sf -o /dev/null --max-time 2 http://127.0.0.1:8080/; then
   exit 0

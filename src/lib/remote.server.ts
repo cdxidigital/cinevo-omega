@@ -78,7 +78,7 @@ export async function syncRemote(
   return parseCommandList(asJson(rows[0]?.queue_json));
 }
 
-export async function pushRemoteCommand(userId: string, code: string, command: unknown): Promise<boolean> {
+export async function pushRemoteCommand(code: string, command: unknown): Promise<boolean> {
   const clean = normalizeCode(code);
   const safe = sanitizeCommand(command);
   if (!/^[A-Z0-9]{6}$/.test(clean) || !safe || JSON.stringify(safe).length > 4_000) return false;
@@ -86,19 +86,19 @@ export async function pushRemoteCommand(userId: string, code: string, command: u
   const rows = await sql<{ code: string }>`
     update cinevo_remotes
     set queue_json = queue_json || ${JSON.stringify(safe)}::jsonb
-    where code = ${clean} and user_id = ${userId} and expires_at > now() and jsonb_array_length(queue_json) < 24
+    where code = ${clean} and expires_at > now() and jsonb_array_length(queue_json) < 24
     returning code
   `;
   return Boolean(rows[0]);
 }
 
-export async function readRemote(userId: string, code: string): Promise<{ now: RemoteNow; ageMs: number } | null> {
+export async function readRemote(code: string): Promise<{ now: RemoteNow; ageMs: number } | null> {
   const clean = normalizeCode(code);
   if (!clean) return null;
   const sql = await getSql();
   const rows = await sql<{ now_json: unknown }>`
     select now_json from cinevo_remotes
-    where code = ${clean} and user_id = ${userId} and expires_at > now()
+    where code = ${clean} and expires_at > now()
   `;
   const row = rows[0];
   if (!row) return null;

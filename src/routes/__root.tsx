@@ -14,6 +14,11 @@ const fetchSessionUser = createServerFn({ method: "GET" }).handler(async () => {
     const u = await getSessionUser();
     return u ? { id: u.id, email: u.email } : null;
   } catch (error) {
+    // Missing production auth config is already logged once at startup; don't
+    // repeat it per request. Public pages keep rendering either way.
+    if (error instanceof Error && error.name === "AuthNotConfiguredError") {
+      return { id: "", email: "", error: error.message, authNotConfigured: true };
+    }
     console.error("[v0] session bootstrap failed", error);
     return { id: "", email: "", error: "Authentication is temporarily unavailable." };
   }
@@ -26,7 +31,7 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { title: `${APP_NAME} — Your media. Your moment.` },
-      { name: "theme-color", content: "#eef3f7" },
+      { name: "theme-color", content: "#06070a" },
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "default" },
@@ -54,7 +59,7 @@ export const Route = createRootRoute({
       <head>
         <HeadContent />
       </head>
-      <body className="bg-cine-bg text-cine-text antialiased">
+      <body>
         <Rehydrate />
         <Pwa />
         <PreviewHostBridge />

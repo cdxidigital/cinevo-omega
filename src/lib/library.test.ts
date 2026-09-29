@@ -16,7 +16,8 @@ test("migrateTheme maps legacy ids", () => {
   assert.equal(migrateTheme("nova"), "pulse");
   assert.equal(migrateTheme("iris"), "day");
   assert.equal(migrateTheme("paper"), "day");
-  assert.equal(migrateTheme("ember"), "ember");
+  // "ember" was renamed to "electric" when the theme palette was refreshed.
+  assert.equal(migrateTheme("ember"), "electric");
   assert.equal(migrateTheme("unknown"), "noir");
 });
 

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { requireUserId } from "@/lib/auth/verify.server";
+import { isAuthNotConfiguredError, requireUserId } from "@/lib/auth/verify.server";
+import { authNotConfiguredResponse } from "@/lib/auth/unavailable";
 import { loadTicket } from "@/lib/playback.server";
 import { serverAddressError } from "@/lib/playback-urls";
 
@@ -36,7 +37,8 @@ export const Route = createFileRoute("/api/stream/$ticket")({
         let userId: string;
         try {
           userId = await requireUserId();
-        } catch {
+        } catch (error) {
+          if (isAuthNotConfiguredError(error)) return authNotConfiguredResponse();
           return new Response("Unauthorized", { status: 401 });
         }
         const ticket = await loadTicket(params.ticket, userId);
@@ -68,7 +70,8 @@ export const Route = createFileRoute("/api/stream/$ticket")({
         let userId: string;
         try {
           userId = await requireUserId();
-        } catch {
+        } catch (error) {
+          if (isAuthNotConfiguredError(error)) return new Response(null, { status: 503 });
           return new Response(null, { status: 401 });
         }
         const ticket = await loadTicket(params.ticket, userId);

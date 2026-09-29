@@ -74,8 +74,34 @@ const authSecret = env("BETTER_AUTH_SECRET");
 /** True when local email/password sign-in is active. */
 export const authConfigured = !authDisabled && emailAndPasswordEnabled;
 
-if (process.env.NODE_ENV === "production" && authConfigured && !authSecret) {
-  throw new Error("BETTER_AUTH_SECRET must be configured in production.");
+const isProduction = process.env.NODE_ENV === "production";
+
+/**
+ * Production with auth on but no signing secret: auth is DISABLED (not made
+ * insecure). We never fall back to a hardcoded or per-boot random secret in
+ * production. Instead `auth` is `null`, `/api/auth/*` answers 503 and anything
+ * that needs a user fails closed, while public pages keep rendering.
+ * Dev / live preview is unchanged (process-stable preview secret).
+ */
+export const authUnavailable = isProduction && authConfigured && !authSecret;
+
+if (isProduction && authConfigured) {
+  const missing = [
+    !authSecret && "BETTER_AUTH_SECRET",
+    !env("BETTER_AUTH_URL") && "BETTER_AUTH_URL",
+    !env("DATABASE_URL") &&
+      "DATABASE_URL (without it auth and app data use the in-memory PGLite fallback, which wipes all users and sessions on every cold start)",
+  ].filter(Boolean);
+  if (authUnavailable) {
+    console.error(
+      `[auth] Sign-in is DISABLED: BETTER_AUTH_SECRET is not set in production. ` +
+        `Missing env vars: ${missing.join(", ")}. ` +
+        `Public pages still render; /api/auth/* returns 503 and signed-in features are unavailable. ` +
+        `Set these on the hosting project (e.g. Vercel > Settings > Environment Variables) and redeploy.`,
+    );
+  } else if (missing.length > 0) {
+    console.warn(`[auth] Production auth is missing recommended env vars: ${missing.join(", ")}.`);
+  }
 }
 
 // This app's own Better Auth origin. When deployed the deployer injects the
@@ -128,7 +154,24 @@ const LOCAL_DEV_ORIGINS: string[] = [
 const baseURL = explicitBaseURL ?? {
   // Include loopback hosts so dynamic baseURL resolves for local email/password
   // (not only the preview wildcard).
-  allowedHosts: [...allowedPreviewHosts, "localhost", "127.0.0.1", "[::1]"],
+  allowedHosts: [
+    ...allowedPreviewHosts,
+    "localhost",
+    "localhost:3000",
+    "localhost:4173",
+    "localhost:5173",
+    "localhost:8080",
+    "127.0.0.1",
+    "127.0.0.1:3000",
+    "127.0.0.1:4173",
+    "127.0.0.1:5173",
+    "127.0.0.1:8080",
+    "[::1]",
+    "[::1]:3000",
+    "[::1]:4173",
+    "[::1]:5173",
+    "[::1]:8080",
+  ],
   // `auto` → trust both http:// and https:// expansions of allowedHosts
   // (preview is https; local dev is http).
   protocol: "auto" as const,
@@ -151,7 +194,6 @@ const trustedOrigins: string[] = explicitBaseURL
 
 const databaseUrl = env("DATABASE_URL");
 
-
 // Real Postgres when `DATABASE_URL` is set (deployed apps), else the app's
 // embedded PGLite (preview) via a Kysely dialect — so Better Auth persists to the
 // SAME DB as app data, including email/password users. Both use the Better Auth
@@ -164,74 +206,84 @@ const database = databaseUrl
 /** Session token cookie name — also read by the live-preview popup completion page. */
 export const SESSION_TOKEN_COOKIE = "__Host-cinevo-auth.session_token";
 
-export const auth = betterAuth({
-  baseURL,
-  // Deployed apps inject BETTER_AUTH_SECRET. Preview: process-stable secret on
-  // globalThis so HMR doesn't invalidate PGLite-backed sessions (see above).
-  secret: authSecret ?? previewAuthSecret(),
-  database,
+function createAuth(secret: string) {
+  return betterAuth({
+    baseURL,
+    // Deployed apps inject BETTER_AUTH_SECRET. Preview: process-stable secret on
+    // globalThis so HMR doesn't invalidate PGLite-backed sessions (see above).
+    secret,
+    database,
 
-  // CSRF / origin check for credentialed auth POSTs (email sign-up/sign-in, …).
-  // See `trustedOrigins` construction above — must cover live preview hosts AND
-  // local loopback variants, or clients get "Invalid origin".
-  trustedOrigins,
+    // CSRF / origin check for credentialed auth POSTs (email sign-up/sign-in, …).
+    // See `trustedOrigins` construction above — must cover live preview hosts AND
+    // local loopback variants, or clients get "Invalid origin".
+    trustedOrigins,
 
-  account: {
-    accountLinking: {
-      enabled: true,
-      trustedProviders: [GATE_PROVIDER_ID],
+    account: {
+      accountLinking: {
+        enabled: true,
+        trustedProviders: [GATE_PROVIDER_ID],
+      },
     },
-  },
 
-  // Cache the session in the short-lived signed `session_data` cookie so reads
-  // (incl. the client's `/get-session`) skip the DB — this shrinks the "loading"
-  // window and reduces auth flicker. See the `auth` skill for the full
-  // flicker-prevention guidance (gate on `isPending`; SSR the session).
-  session: { cookieCache: { enabled: true, maxAge: 300 } },
+    // Cache the session in the short-lived signed `session_data` cookie so reads
+    // (incl. the client's `/get-session`) skip the DB — this shrinks the "loading"
+    // window and reduces auth flicker. See the `auth` skill for the full
+    // flicker-prevention guidance (gate on `isPending`; SSR the session).
+    session: { cookieCache: { enabled: true, maxAge: 300 } },
 
-  // Local email/password — toggled only via `./email-password` (not a plugin).
-  ...(emailAndPasswordEnabled ? { emailAndPassword: { enabled: true } } : {}),
+    // Local email/password — toggled only via `./email-password` (not a plugin).
+    ...(emailAndPasswordEnabled ? { emailAndPassword: { enabled: true } } : {}),
 
-  // `__Host-` prefixed cookies: the browser REFUSES any same-named cookie that
-  // carries a `Domain` attribute, so a sibling `*.grok.me` app cannot "toss" a
-  // `Domain=.grok.me` session cookie onto this app. `__Host-` requires Secure +
-  // Path=/ + no Domain; Better Auth otherwise uses `__Secure-` (which permits
-  // Domain), so we drop its auto prefix (`useSecureCookies: false`) and set
-  // Secure + the names ourselves. (Browsers allow Secure cookies on
-  // `http://localhost`, so local dev still works.)
-  advanced: {
-    useSecureCookies: false,
-    defaultCookieAttributes: {
-      secure: true,
-      sameSite: process.env.NODE_ENV === "development" ? ("none" as const) : ("lax" as const),
-      path: "/",
+    // `__Host-` prefixed cookies: the browser REFUSES any same-named cookie that
+    // carries a `Domain` attribute, so a sibling `*.grok.me` app cannot "toss" a
+    // `Domain=.grok.me` session cookie onto this app. `__Host-` requires Secure +
+    // Path=/ + no Domain; Better Auth otherwise uses `__Secure-` (which permits
+    // Domain), so we drop its auto prefix (`useSecureCookies: false`) and set
+    // Secure + the names ourselves. (Browsers allow Secure cookies on
+    // `http://localhost`, so local dev still works.)
+    advanced: {
+      useSecureCookies: false,
+      defaultCookieAttributes: {
+        secure: true,
+        sameSite: process.env.NODE_ENV === "development" ? ("none" as const) : ("lax" as const),
+        path: "/",
+      },
+      cookies: {
+        session_token: { name: SESSION_TOKEN_COOKIE },
+        session_data: { name: "__Host-cinevo-auth.session_data" },
+        account_data: { name: "__Host-cinevo-auth.account_data" },
+        dont_remember: { name: "__Host-cinevo-auth.dont_remember" },
+      },
     },
-    cookies: {
-      session_token: { name: SESSION_TOKEN_COOKIE },
-      session_data: { name: "__Host-cinevo-auth.session_data" },
-      account_data: { name: "__Host-cinevo-auth.account_data" },
-      dont_remember: { name: "__Host-cinevo-auth.dont_remember" },
-    },
-  },
 
-  plugins: [
-    gateIdentitySessions(),
+    plugins: [
+      gateIdentitySessions(),
 
-    // Accept `Authorization: Bearer <session-token>` as an alternative to the
-    // cookie. Needed for the LIVE PREVIEW: the app runs in an embedded iframe
-    // where cookies are partitioned, so after popup sign-in it authenticates with
-    // a bearer token instead (see `client.ts` / the `auth` skill). The hook only
-    // fires when an Authorization header is present, so the cookie path
-    // (deployed apps) is unaffected.
-    bearer(),
+      // Accept `Authorization: Bearer <session-token>` as an alternative to the
+      // cookie. Needed for the LIVE PREVIEW: the app runs in an embedded iframe
+      // where cookies are partitioned, so after popup sign-in it authenticates with
+      // a bearer token instead (see `client.ts` / the `auth` skill). The hook only
+      // fires when an Authorization header is present, so the cookie path
+      // (deployed apps) is unaffected.
+      bearer(),
 
-    // Bridges Better Auth's Set-Cookie into TanStack Start responses. MUST be
-    // last so it runs after every other plugin's hooks.
-    tanstackStartCookies(),
-  ],
-});
+      // Bridges Better Auth's Set-Cookie into TanStack Start responses. MUST be
+      // last so it runs after every other plugin's hooks.
+      tanstackStartCookies(),
+    ],
+  });
+}
+
+/**
+ * This app's Better Auth instance, or `null` when auth is unavailable (production
+ * without `BETTER_AUTH_SECRET`, see `authUnavailable`). Callers must handle `null`
+ * by failing closed (503 / `AuthNotConfiguredError`), never by skipping auth.
+ */
+// Production never signs with the preview fallback: no real secret -> no auth.
+export const auth: ReturnType<typeof createAuth> | null =
+  isProduction && !authSecret ? null : createAuth(authSecret ?? previewAuthSecret());
 
 export function readSessionToken(): string | null {
   return getCookie(SESSION_TOKEN_COOKIE) ?? null;
 }
-
