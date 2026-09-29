@@ -93,18 +93,42 @@ const previewAllowedHosts: string[] = [
   // sandbox hostname. Keep this scoped to the preview domain, not all hosts.
   "*.v0.build",
 ];
+
+const v0PreviewOrigins: string[] = [
+  env("V0_RUNTIME_URL"),
+  env("V0_DEV_APP_URL"),
+  env("V0_BUILD_URL"),
+  env("V0_SANDBOX_URL"),
+].filter((value): value is string => Boolean(value));
+
+const v0PreviewHosts: string[] = v0PreviewOrigins.flatMap((origin) => {
+  try {
+    return [new URL(origin).host];
+  } catch {
+    return [];
+  }
+});
+
+const allowedPreviewHosts = [...new Set([...previewAllowedHosts, ...v0PreviewHosts])];
 // Local `npm run dev` (port 8080 contract). Browsers may send Origin as any of
 // these for the same server — trusting only `localhost` rejects `127.0.0.1` and
 // breaks email/password with "Invalid origin".
 const LOCAL_DEV_ORIGINS: string[] = [
+  "http://localhost:3000",
+  "http://localhost:4173",
+  "http://localhost:5173",
   "http://localhost:8080",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:4173",
+  "http://127.0.0.1:5173",
   "http://127.0.0.1:8080",
+  "http://[::1]:3000",
   "http://[::1]:8080",
 ];
 const baseURL = explicitBaseURL ?? {
   // Include loopback hosts so dynamic baseURL resolves for local email/password
   // (not only the preview wildcard).
-  allowedHosts: [...previewAllowedHosts, "localhost", "127.0.0.1", "[::1]"],
+  allowedHosts: [...allowedPreviewHosts, "localhost", "127.0.0.1", "[::1]"],
   // `auto` → trust both http:// and https:// expansions of allowedHosts
   // (preview is https; local dev is http).
   protocol: "auto" as const,
@@ -117,9 +141,11 @@ const trustedOrigins: string[] = explicitBaseURL
   ? [explicitBaseURL, ...LOCAL_DEV_ORIGINS]
   : [
       // Only exact configured preview hosts and local development origins are trusted.
-      ...previewAllowedHosts,
+      ...allowedPreviewHosts,
+      // Trust the exact Vercel/v0 preview origins injected for this project.
+      ...v0PreviewOrigins,
       // Full-origin wildcards (matched against Origin)
-      ...previewAllowedHosts.flatMap((host) => [`https://${host}`, `http://${host}`]),
+      ...allowedPreviewHosts.flatMap((host) => [`https://${host}`, `http://${host}`]),
       ...LOCAL_DEV_ORIGINS,
     ];
 

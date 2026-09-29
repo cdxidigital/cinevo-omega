@@ -8,6 +8,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { nitro } from "nitro/vite";
 // @ts-expect-error JS plugin alongside the TS vite config
 import { isMigrationFile } from "./scripts/migration-plan.mjs";
+import { appEnvPlugin } from "./scripts/app-env-plugin.mjs";
 
 /** The files `src/lib/db.ts` globs — same directory, same non-recursive scope. */
 function hasGlobbedMigrations(root: string): boolean {
@@ -65,6 +66,7 @@ export default defineConfig(({ command, isPreview }) => ({
   },
   resolve: { tsconfigPaths: true },
   plugins: [
+    appEnvPlugin(),
     pgliteBootstrapPlugin(),
     tailwindcss(),
     tanstackStart(),
