@@ -4,3 +4,6 @@ node_modules/
 .github_repo
 .env
 .env.*
+nodes/cinevo-node/tools/certs/cinevo-node.key
+nodes/cinevo-node/tools/certs/cinevo-node.crt
+nodes/cinevo-node/tools/certs/cinevo-node.p12
